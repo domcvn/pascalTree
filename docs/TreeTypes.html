@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>TreeGeneration: TreeTypes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 1.0.4">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="StyleSheet" type="text/css" href="bootstrap.min.css">
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<nav class="navbar d-md-none sticky-top bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">TreeGeneration</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+<div class="offcanvas-md offcanvas-start navigation" tabindex="-1" id="sidebarNav" data-bs-scroll="true">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">TreeGeneration</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body py-2">
+<h2><a href="index.html">TreeGeneration</a></h2><ul class="nav flex-column px-3"><li class="nav-item"><a class="nav-link px-2 py-1" href="AllUnits.html">Units</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="ClassHierarchy.html">Class Hierarchy</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllClasses.html">Classes, Interfaces, Objects and Records</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllTypes.html">Types</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllVariables.html">Variables</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllConstants.html">Constants</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllFunctions.html">Functions and Procedures</a></li><li class="nav-item"><a class="nav-link px-2 py-1" href="AllIdentifiers.html">Identifiers</a></li></ul></div></div>
+<main class="pasdoc-content content">
+<div class="container-fluid py-3 px-4">
+<h1 class="unit">Unit TreeTypes</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section"><a class="section" href="#PasDoc-Classes">Classes, Interfaces, Objects and Records</a></div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section"><a class="section" href="#PasDoc-Types">Types</a></div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+This unit defines the data structures used to represent a tree.</p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-Classes"></span><h3 class="cio">Classes, Interfaces, Objects and Records</h3>
+<table class="classestable wide_list">
+<tr class="listheader">
+<th class="itemname">Name</th>
+<th class="itemdesc">Description</th>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="TreeTypes.TCoord.html"><code>TCoord</code></a></td>
+<td class="itemdesc">Represents a two-dimensional coordinate.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="TreeTypes.TPoint.html"><code>TPoint</code></a></td>
+<td class="itemdesc">Represents a single graphical element of a tree.</td>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="TreeTypes.TBranch.html"><code>TBranch</code></a></td>
+<td class="itemdesc">Represents an active branch of a tree.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="TreeTypes.TTree.html"><code>TTree</code></a></td>
+<td class="itemdesc">Represents the complete state of a tree.</td>
+</tr>
+</table>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#initialiseCoord-LongInt-LongInt-">initialiseCoord</a></strong>(x, y: LongInt): <a href="TreeTypes.TCoord.html">TCoord</a>;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#initialisePoint-TCoordcharacterChar-TState-">initialisePoint</a></strong>(coord: <a href="TreeTypes.TCoord.html">TCoord</a>, character: Char; state: <a href="TreeTypes.html#TState">TState</a>): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#getPoint-TTree-LongInt-">getPoint</a></strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>; idx: LongInt): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>procedure <strong><a href="TreeTypes.html#setPoint-TTree-LongInt-TPoint-">setPoint</a></strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; idx: LongInt; point: <a href="TreeTypes.TPoint.html">TPoint</a>);</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#getPointCount-TTree-">getPointCount</a></strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): LongInt;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#initialiseBranch-TCoord-LongInt-TState-">initialiseBranch</a></strong>(coord: <a href="TreeTypes.TCoord.html">TCoord</a>; remainingLife: LongInt; state: <a href="TreeTypes.html#TState">TState</a>): <a href="TreeTypes.TBranch.html">TBranch</a>;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#getBranch-TTree-LongInt-">getBranch</a></strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>; idx: LongInt): <a href="TreeTypes.TBranch.html">TBranch</a>;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>procedure <strong><a href="TreeTypes.html#setBranch-TTree-LongInt-TBranch-">setBranch</a></strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; idx: LongInt; branch: <a href="TreeTypes.TBranch.html">TBranch</a>);</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>procedure <strong><a href="TreeTypes.html#removeBranch-TTree-LongInt-">removeBranch</a></strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; idx: LongInt);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#getBranchCount-TTree-">getBranchCount</a></strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): LongInt;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#initialiseTree-Cardinal-LongInt-">initialiseTree</a></strong>(seed: Cardinal; targetTime: LongInt): <a href="TreeTypes.TTree.html">TTree</a>;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#getSeed-TTree-">getSeed</a></strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): Cardinal;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>procedure <strong><a href="TreeTypes.html#setSeed-TTree-Cardinal-">setSeed</a></strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; seed: Cardinal);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#getRandomState-TTree-">getRandomState</a></strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): Cardinal;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>procedure <strong><a href="TreeTypes.html#setRandomState-TTree-Cardinal-">setRandomState</a></strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; randomState: Cardinal);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#getTargetTime-TTree-">getTargetTime</a></strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): LongInt;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>procedure <strong><a href="TreeTypes.html#setTargetTime-TTree-LongInt-">setTargetTime</a></strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; targetTime: LongInt);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#getGrowthTime-TTree-">getGrowthTime</a></strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): LongInt;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>procedure <strong><a href="TreeTypes.html#setGrowthTime-TTree-LongInt-">setGrowthTime</a></strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; growthTime: LongInt);</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>procedure <strong><a href="TreeTypes.html#clearTree-TTree-">clearTree</a></strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>);</code></td>
+</tr>
+</table>
+<span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
+<table class="summary wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><code><strong><a href="TreeTypes.html#TState">TState</a></strong> = (...);</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="initialiseCoord-LongInt-LongInt-"></span><code>function <strong>initialiseCoord</strong>(x, y: LongInt): <a href="TreeTypes.TCoord.html">TCoord</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates and returns a coordinate initialised with the given x and y values.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="initialisePoint-TCoordcharacterChar-TState-"></span><code>function <strong>initialisePoint</strong>(coord: <a href="TreeTypes.TCoord.html">TCoord</a>, character: Char; state: <a href="TreeTypes.html#TState">TState</a>): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates and returns a point initialised with the given coordinate, character, and state.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="getPoint-TTree-LongInt-"></span><code>function <strong>getPoint</strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>; idx: LongInt): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the point stored at the index <strong>idx</strong> in tree.
+
+<p>If <strong>idx</strong> is outside the valid range of the <strong>points</strong> array, an empty point with a blank character and Dead state is returned.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="setPoint-TTree-LongInt-TPoint-"></span><code>procedure <strong>setPoint</strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; idx: LongInt; point: <a href="TreeTypes.TPoint.html">TPoint</a>);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Sets the point at index <strong>idx</strong>.
+
+<p>If <strong>idx</strong> refers to an existing point, that point is replaced. If <strong>idx</strong> is equal to the current number of points, the point is appended to the array. If neither, the tree is not modified.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="getPointCount-TTree-"></span><code>function <strong>getPointCount</strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): LongInt;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the number of points currently stored in tree.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="initialiseBranch-TCoord-LongInt-TState-"></span><code>function <strong>initialiseBranch</strong>(coord: <a href="TreeTypes.TCoord.html">TCoord</a>; remainingLife: LongInt; state: <a href="TreeTypes.html#TState">TState</a>): <a href="TreeTypes.TBranch.html">TBranch</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates and returns a branch initialised with a given coordinate, remaining life, and state.
+
+<p>The age of a newly initialised branch is set to 0.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="getBranch-TTree-LongInt-"></span><code>function <strong>getBranch</strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>; idx: LongInt): <a href="TreeTypes.TBranch.html">TBranch</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the branch stored at index <strong>idx</strong> in tree.
+
+<p>If <strong>idx</strong> is outside the valid range of the branches array, an empty branch with 0 remaining life, 0 age, and Dead state is returned.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="setBranch-TTree-LongInt-TBranch-"></span><code>procedure <strong>setBranch</strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; idx: LongInt; branch: <a href="TreeTypes.TBranch.html">TBranch</a>);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Sets the branch at index <strong>idx</strong>.
+
+<p>If <strong>idx</strong> refers to an existing branch, that branch is replaced. If <strong>idx</strong> is equal to the current number of branches, the branch is appended to the array. If neither, the tree is not modified.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="removeBranch-TTree-LongInt-"></span><code>procedure <strong>removeBranch</strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; idx: LongInt);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Removes the branch at index <strong>idx</strong>.
+
+<p>If <strong>idx</strong> is invalid, the tree is not modified.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="getBranchCount-TTree-"></span><code>function <strong>getBranchCount</strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): LongInt;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the number of branches currently stored in tree.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="initialiseTree-Cardinal-LongInt-"></span><code>function <strong>initialiseTree</strong>(seed: Cardinal; targetTime: LongInt): <a href="TreeTypes.TTree.html">TTree</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates and returns a new tree.
+
+<p>The tree is initialised with the specified seed and target duration. Its growth time is set to 0 and its points and branches arrays are initialised as empty arrays.
+
+<p>If <strong>seed</strong> is 0, <strong>randomState</strong> is initialised to 1. If <strong>targetTime</strong> is negative, it is initialised to 0.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="getSeed-TTree-"></span><code>function <strong>getSeed</strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): Cardinal;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the initial random seed of tree.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="setSeed-TTree-Cardinal-"></span><code>procedure <strong>setSeed</strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; seed: Cardinal);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Sets the initial random seed of tree.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="getRandomState-TTree-"></span><code>function <strong>getRandomState</strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): Cardinal;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the current state of the pseudo-random generator associated with tree.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="setRandomState-TTree-Cardinal-"></span><code>procedure <strong>setRandomState</strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; randomState: Cardinal);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Sets the current state of the pseudo-random generator associated with tree.
+
+<p>If <strong>randomState</strong> is 0, it is set to 1.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="getTargetTime-TTree-"></span><code>function <strong>getTargetTime</strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): LongInt;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the target duration of tree, in seconds.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="setTargetTime-TTree-LongInt-"></span><code>procedure <strong>setTargetTime</strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; targetTime: LongInt);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Sets the target duration of tree.
+
+<p>If <strong>targetTime</strong> is negative, it is set to 0.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="getGrowthTime-TTree-"></span><code>function <strong>getGrowthTime</strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): LongInt;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the amount of focus time already converted into tree growth, in seconds.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="setGrowthTime-TTree-LongInt-"></span><code>procedure <strong>setGrowthTime</strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; growthTime: LongInt);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Sets the amount of time already converted into tree growth.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="clearTree-TTree-"></span><code>procedure <strong>clearTree</strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Clears all points and active branches of tree and resets its stored seed, random state, target time, and growth time to 0.</p>
+</td></tr>
+</table>
+<h3 class="detail">Types</h3>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="TState"></span><code><strong>TState</strong> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Represents the different states that a point or branch can have during the growth of a tree.</p>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="Trunk">Trunk</span>: Main trunk of the tree</li>
+<li>
+<span id="Left">Left</span>: Branch growing to the left</li>
+<li>
+<span id="Right">Right</span>: Branch growing to the right</li>
+<li>
+<span id="Dying">Dying</span>: Branch or point at the end of its growth</li>
+<li>
+<span id="Dead">Dead</span>: Dead branch or point</li>
+</ul>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a href="https://pasdoc.github.io/">PasDoc 1.0.4</a>. </em>
+</span>
+</div></main>
+<script src="bootstrap.bundle.min.js"></script>
+</body></html>
