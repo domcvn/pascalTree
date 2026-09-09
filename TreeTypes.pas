@@ -29,6 +29,7 @@ type
         coord: TCoord; //< Current position of the branch
         remainingLife: LongInt; //< Number of growth steps remaining
         age: LongInt; //< Number of growth steps already completed
+        shootCooldown: LongInt; //< Number of growth steps before another shoot can be created
         state: TState; //< State of the branch
     end;
 
@@ -38,6 +39,7 @@ type
         randomState: Cardinal; //< Current state of the random generator
         targetTime: LongInt; //< Selected duration, in seconds
         growthTime: LongInt; //< The time already converted into growth, in seconds
+        shootCounter: LongInt; //< Number of shoots created by the tree
         points: Array of TPoint; //< All graphical points already generated
         branches: Array of TBranch; //< Branches that are still growing
     end;
@@ -47,7 +49,7 @@ type
 function initialiseCoord(x, y: LongInt): TCoord;
 
 { Creates and returns a point initialised with the given coordinate, character, and state. }
-function initialisePoint(coord: TCoord, character: Char; state: TState): TPoint;
+function initialisePoint(coord: TCoord; character: Char; state: TState): TPoint;
 
 { Returns the point stored at the index @bold(idx) in tree. 
 
@@ -66,12 +68,12 @@ function getPointCount(tree: TTree): LongInt;
 
 { Creates and returns a branch initialised with a given coordinate, remaining life, and state.
 
-The age of a newly initialised branch is set to 0.}
+The age and shoot cooldown of a newly initialised branch is set to 0.}
 function initialiseBranch(coord: TCoord; remainingLife: LongInt; state: TState): TBranch;
 
 { Returns the branch stored at index @bold(idx) in tree.
 
-If @bold(idx) is outside the valid range of the branches array, an empty branch with 0 remaining life, 0 age, and Dead state is returned.}
+If @bold(idx) is outside the valid range of the branches array, an empty branch with 0 remaining life, 0 age, 0 shoot cooldown, and Dead state is returned.}
 function getBranch(tree: TTree; idx: LongInt): TBranch;
 
 { Sets the branch at index @bold(idx).
@@ -125,10 +127,17 @@ function getGrowthTime(tree: TTree): LongInt;
 { Sets the amount of time already converted into tree growth. }
 procedure setGrowthTime(var tree: TTree; growthTime: LongInt);
 
-{ Clears all points and active branches of tree and resets its stored seed, random state, target time, and growth time to 0. }
+{ Returns the current number of shoots created by the tree. }
+function getShootCounter(tree: TTree): LongInt;
+
+{ Sets the current number of shoots created by the tree. }
+procedure setShootCounter(var tree: TTree; shootCounter: LongInt);
+
+{ Clears all points and active branches of tree and resets its stored seed, random state, target time, growth time, and shoot counter. }
 procedure clearTree(var tree: TTree);
 
 implementation
+
 function initialiseCoord(x, y: LongInt): TCoord;
 begin 
     initialiseCoord.x := x;
@@ -136,7 +145,7 @@ begin
 end; 
 
 
-function initialisePoint(coord: TCoord, character: Char; state: TState): TPoint;
+function initialisePoint(coord: TCoord; character: Char; state: TState): TPoint;
 begin 
     initialisePoint.coord := coord;
     initialisePoint.character := character;
@@ -147,7 +156,7 @@ end;
 function getPoint(tree: TTree; idx: LongInt): TPoint;
 begin 
     if (idx >= 0) and (idx < Length(tree.points)) then 
-        getPoint := tree.points[idx];
+        getPoint := tree.points[idx]
     else 
         getPoint := initialisePoint(initialiseCoord(0,0), ' ', Dead);
 end;
@@ -179,6 +188,7 @@ begin
     initialiseBranch.coord := coord; 
     initialiseBranch.remainingLife := remainingLife;
     initialiseBranch.age := 0;
+    initialiseBranch.shootCooldown := 0;
     initialiseBranch.state := state;
 end;
 
@@ -229,22 +239,22 @@ begin
     getBranchCount := length(tree.branches);
 end;
 
-
 function initialiseTree(seed: Cardinal; targetTime: LongInt): TTree;
 begin 
     initialiseTree.seed := seed;
 
     if seed = 0 then 
-        initialiseTree.randomState := 1;
+        initialiseTree.randomState := 1
     else 
         initialiseTree.randomState := seed;
     
     if targetTime < 0 then 
-        initialiseTree.targetTime := 0;
+        initialiseTree.targetTime := 0
     else 
         initialiseTree.targetTime := targetTime;
 
     initialiseTree.growthTime := 0;
+    initialiseTree.shootCounter := 0;
 
     setLength(initialiseTree.points, 0);
     setLength(initialiseTree.branches, 0);
@@ -307,6 +317,15 @@ begin
         tree.growthTime := growthTime;
 end;
 
+function getShootCounter(tree: TTree): LongInt;
+begin 
+    getShootCounter := tree.shootCounter;
+end;
+
+procedure setShootCounter(var tree: TTree; shootCounter: LongInt);
+begin 
+    tree.shootCounter := shootCounter;
+end;
 
 procedure clearTree(var tree: TTree);
 begin 
@@ -314,9 +333,10 @@ begin
     setLength(tree.branches, 0);
 
     tree.seed := 0;
-    tree.randomState := 0;
+    tree.randomState := 1;
     tree.targetTime := 0;
     tree.growthTime := 0;
+    tree.shootCounter := 0;
 end;
 
 end.

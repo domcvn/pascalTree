@@ -62,7 +62,7 @@ This unit defines the data structures used to represent a tree.</p>
 <td class="itemcode"><code>function <strong><a href="TreeTypes.html#initialiseCoord-LongInt-LongInt-">initialiseCoord</a></strong>(x, y: LongInt): <a href="TreeTypes.TCoord.html">TCoord</a>;</code></td>
 </tr>
 <tr class="list2 visibility-published">
-<td class="itemcode"><code>function <strong><a href="TreeTypes.html#initialisePoint-TCoordcharacterChar-TState-">initialisePoint</a></strong>(coord: <a href="TreeTypes.TCoord.html">TCoord</a>, character: Char; state: <a href="TreeTypes.html#TState">TState</a>): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#initialisePoint-TCoord-Char-TState-">initialisePoint</a></strong>(coord: <a href="TreeTypes.TCoord.html">TCoord</a>; character: Char; state: <a href="TreeTypes.html#TState">TState</a>): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
 </tr>
 <tr class="list visibility-published">
 <td class="itemcode"><code>function <strong><a href="TreeTypes.html#getPoint-TTree-LongInt-">getPoint</a></strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>; idx: LongInt): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
@@ -87,6 +87,12 @@ This unit defines the data structures used to represent a tree.</p>
 </tr>
 <tr class="list2 visibility-published">
 <td class="itemcode"><code>function <strong><a href="TreeTypes.html#getBranchCount-TTree-">getBranchCount</a></strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): LongInt;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#getShootCooldown-TBranch-">getShootCooldown</a></strong>(branch: <a href="TreeTypes.TBranch.html">TBranch</a>): LongInt;</code></td>
+</tr>
+<tr class="list2 visibility-published">
+<td class="itemcode"><code>procedure <strong><a href="TreeTypes.html#setShootCooldown-TBranch-LongInt-">setShootCooldown</a></strong>(var branch: <a href="TreeTypes.TBranch.html">TBranch</a>; shootCooldown: LongInt);</code></td>
 </tr>
 <tr class="list visibility-published">
 <td class="itemcode"><code>function <strong><a href="TreeTypes.html#initialiseTree-Cardinal-LongInt-">initialiseTree</a></strong>(seed: Cardinal; targetTime: LongInt): <a href="TreeTypes.TTree.html">TTree</a>;</code></td>
@@ -116,6 +122,12 @@ This unit defines the data structures used to represent a tree.</p>
 <td class="itemcode"><code>procedure <strong><a href="TreeTypes.html#setGrowthTime-TTree-LongInt-">setGrowthTime</a></strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; growthTime: LongInt);</code></td>
 </tr>
 <tr class="list2 visibility-published">
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#getShootCounter-TTree-">getShootCounter</a></strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): LongInt;</code></td>
+</tr>
+<tr class="list visibility-published">
+<td class="itemcode"><code>procedure <strong><a href="TreeTypes.html#setShootCounter-TTree-LongInt-">setShootCounter</a></strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; shootCounter: LongInt);</code></td>
+</tr>
+<tr class="list2 visibility-published">
 <td class="itemcode"><code>procedure <strong><a href="TreeTypes.html#clearTree-TTree-">clearTree</a></strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>);</code></td>
 </tr>
 </table>
@@ -138,7 +150,7 @@ Creates and returns a coordinate initialised with the given x and y values.</p>
 </table>
 <table class="detail visibility-published wide_list">
 <tr class="list visibility-published">
-<td class="itemcode"><span id="initialisePoint-TCoordcharacterChar-TState-"></span><code>function <strong>initialisePoint</strong>(coord: <a href="TreeTypes.TCoord.html">TCoord</a>, character: Char; state: <a href="TreeTypes.html#TState">TState</a>): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
+<td class="itemcode"><span id="initialisePoint-TCoord-Char-TState-"></span><code>function <strong>initialisePoint</strong>(coord: <a href="TreeTypes.TCoord.html">TCoord</a>; character: Char; state: <a href="TreeTypes.html#TState">TState</a>): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
 </tr>
 <tr><td colspan="1">
 <p>
@@ -184,7 +196,7 @@ Returns the number of points currently stored in tree.</p>
 <p>
 Creates and returns a branch initialised with a given coordinate, remaining life, and state.
 
-<p>The age of a newly initialised branch is set to 0.</p>
+<p>The age and shoot cooldown of a newly initialised branch is set to 0.</p>
 </td></tr>
 </table>
 <table class="detail visibility-published wide_list">
@@ -195,7 +207,7 @@ Creates and returns a branch initialised with a given coordinate, remaining life
 <p>
 Returns the branch stored at index <strong>idx</strong> in tree.
 
-<p>If <strong>idx</strong> is outside the valid range of the branches array, an empty branch with 0 remaining life, 0 age, and Dead state is returned.</p>
+<p>If <strong>idx</strong> is outside the valid range of the branches array, an empty branch with 0 remaining life, 0 age, 0 shoot cooldown, and Dead state is returned.</p>
 </td></tr>
 </table>
 <table class="detail visibility-published wide_list">
@@ -227,6 +239,24 @@ Removes the branch at index <strong>idx</strong>.
 <tr><td colspan="1">
 <p>
 Returns the number of branches currently stored in tree.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="getShootCooldown-TBranch-"></span><code>function <strong>getShootCooldown</strong>(branch: <a href="TreeTypes.TBranch.html">TBranch</a>): LongInt;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the current number of growth steps remaining before the branch can make another shoot.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="setShootCooldown-TBranch-LongInt-"></span><code>procedure <strong>setShootCooldown</strong>(var branch: <a href="TreeTypes.TBranch.html">TBranch</a>; shootCooldown: LongInt);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Sets the number of growth steps remaining before the branch can make another shoot</p>
 </td></tr>
 </table>
 <table class="detail visibility-published wide_list">
@@ -320,11 +350,29 @@ Sets the amount of time already converted into tree growth.</p>
 </table>
 <table class="detail visibility-published wide_list">
 <tr class="list visibility-published">
+<td class="itemcode"><span id="getShootCounter-TTree-"></span><code>function <strong>getShootCounter</strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): LongInt;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the current number of shoots created by the tree.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
+<td class="itemcode"><span id="setShootCounter-TTree-LongInt-"></span><code>procedure <strong>setShootCounter</strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>; shootCounter: LongInt);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Sets the current number of shoots created by the tree.</p>
+</td></tr>
+</table>
+<table class="detail visibility-published wide_list">
+<tr class="list visibility-published">
 <td class="itemcode"><span id="clearTree-TTree-"></span><code>procedure <strong>clearTree</strong>(var tree: <a href="TreeTypes.TTree.html">TTree</a>);</code></td>
 </tr>
 <tr><td colspan="1">
 <p>
-Clears all points and active branches of tree and resets its stored seed, random state, target time, and growth time to 0.</p>
+Clears all points and active branches of tree and resets its stored seed, random state, target time, growth time, and shoot counter.</p>
 </td></tr>
 </table>
 <h3 class="detail">Types</h3>

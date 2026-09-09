@@ -36,7 +36,7 @@
 <tr class="list">
 <td class="itemname"><a class="bold" href="TreeTypes.html#clearTree-TTree-">clearTree</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
-<td class="itemdesc"><p>Clears all points and active branches of tree and resets its stored seed, random state, target time, and growth time to 0.</p></td>
+<td class="itemdesc"><p>Clears all points and active branches of tree and resets its stored seed, random state, target time, growth time, and shoot counter.</p></td>
 </tr>
 <tr class="list2">
 <td class="itemname"><a class="bold" href="TreeTypes.html#getBranch-TTree-LongInt-">getBranch</a></td>
@@ -74,86 +74,111 @@
 <td class="itemdesc"><p>Returns the initial random seed of tree.</p></td>
 </tr>
 <tr class="list">
+<td class="itemname"><a class="bold" href="TreeTypes.html#getShootCooldown-TBranch-">getShootCooldown</a></td>
+<td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
+<td class="itemdesc"><p>Returns the current number of growth steps remaining before the branch can make another shoot.</p></td>
+</tr>
+<tr class="list2">
+<td class="itemname"><a class="bold" href="TreeTypes.html#getShootCounter-TTree-">getShootCounter</a></td>
+<td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
+<td class="itemdesc"><p>Returns the current number of shoots created by the tree.</p></td>
+</tr>
+<tr class="list">
 <td class="itemname"><a class="bold" href="TreeTypes.html#getTargetTime-TTree-">getTargetTime</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Returns the target duration of tree, in seconds.</p></td>
 </tr>
 <tr class="list2">
+<td class="itemname"><a class="bold" href="TreeGenerator.html#growTree-TTree-LongInt-">growTree</a></td>
+<td class="itemunit"><a class="bold" href="TreeGenerator.html">TreeGenerator</a></td>
+<td class="itemdesc"><p>Advances the growth of <strong>tree</strong> according to the elapsed time.</p></td>
+</tr>
+<tr class="list">
 <td class="itemname"><a class="bold" href="TreeTypes.html#initialiseBranch-TCoord-LongInt-TState-">initialiseBranch</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Creates and returns a branch initialised with a given coordinate, remaining life, and state.</p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="TreeTypes.html#initialiseCoord-LongInt-LongInt-">initialiseCoord</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Creates and returns a coordinate initialised with the given x and y values.</p></td>
 </tr>
-<tr class="list2">
-<td class="itemname"><a class="bold" href="TreeTypes.html#initialisePoint-TCoordcharacterChar-TState-">initialisePoint</a></td>
+<tr class="list">
+<td class="itemname"><a class="bold" href="TreeTypes.html#initialisePoint-TCoord-Char-TState-">initialisePoint</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Creates and returns a point initialised with the given coordinate, character, and state.</p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="TreeTypes.html#initialiseTree-Cardinal-LongInt-">initialiseTree</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Creates and returns a new tree.</p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="TreeTypes.html#removeBranch-TTree-LongInt-">removeBranch</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Removes the branch at index <strong>idx</strong>.</p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="TreeTypes.html#setBranch-TTree-LongInt-TBranch-">setBranch</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Sets the branch at index <strong>idx</strong>.</p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="TreeTypes.html#setGrowthTime-TTree-LongInt-">setGrowthTime</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Sets the amount of time already converted into tree growth.</p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="TreeTypes.html#setPoint-TTree-LongInt-TPoint-">setPoint</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Sets the point at index <strong>idx</strong>.</p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="TreeTypes.html#setRandomState-TTree-Cardinal-">setRandomState</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Sets the current state of the pseudo-random generator associated with tree.</p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="TreeTypes.html#setSeed-TTree-Cardinal-">setSeed</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Sets the initial random seed of tree.</p></td>
 </tr>
+<tr class="list">
+<td class="itemname"><a class="bold" href="TreeTypes.html#setShootCooldown-TBranch-LongInt-">setShootCooldown</a></td>
+<td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
+<td class="itemdesc"><p>Sets the number of growth steps remaining before the branch can make another shoot</p></td>
+</tr>
 <tr class="list2">
+<td class="itemname"><a class="bold" href="TreeTypes.html#setShootCounter-TTree-LongInt-">setShootCounter</a></td>
+<td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
+<td class="itemdesc"><p>Sets the current number of shoots created by the tree.</p></td>
+</tr>
+<tr class="list">
 <td class="itemname"><a class="bold" href="TreeTypes.html#setTargetTime-TTree-LongInt-">setTargetTime</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Sets the target duration of tree.</p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="TreeTypes.TBranch.html">TBranch</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Represents an active branch of a tree.</p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="TreeTypes.TCoord.html">TCoord</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Represents a two-dimensional coordinate.</p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="TreeTypes.TPoint.html">TPoint</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Represents a single graphical element of a tree.</p></td>
 </tr>
-<tr class="list2">
+<tr class="list">
 <td class="itemname"><a class="bold" href="TreeTypes.html#TState">TState</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Represents the different states that a point or branch can have during the growth of a tree.</p></td>
 </tr>
-<tr class="list">
+<tr class="list2">
 <td class="itemname"><a class="bold" href="TreeTypes.TTree.html">TTree</a></td>
 <td class="itemunit"><a class="bold" href="TreeTypes.html">TreeTypes</a></td>
 <td class="itemdesc"><p>Represents the complete state of a tree.</p></td>

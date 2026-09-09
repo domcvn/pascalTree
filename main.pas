@@ -1,5 +1,6 @@
 program main;
+uses TreeTypes, TreeGenerator;
 
 begin 
-    writeln(sizeof(LongInt));
+    
 end.
