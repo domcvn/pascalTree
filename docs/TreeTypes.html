@@ -89,12 +89,6 @@ This unit defines the data structures used to represent a tree.</p>
 <td class="itemcode"><code>function <strong><a href="TreeTypes.html#getBranchCount-TTree-">getBranchCount</a></strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>): LongInt;</code></td>
 </tr>
 <tr class="list visibility-published">
-<td class="itemcode"><code>function <strong><a href="TreeTypes.html#getShootCooldown-TBranch-">getShootCooldown</a></strong>(branch: <a href="TreeTypes.TBranch.html">TBranch</a>): LongInt;</code></td>
-</tr>
-<tr class="list2 visibility-published">
-<td class="itemcode"><code>procedure <strong><a href="TreeTypes.html#setShootCooldown-TBranch-LongInt-">setShootCooldown</a></strong>(var branch: <a href="TreeTypes.TBranch.html">TBranch</a>; shootCooldown: LongInt);</code></td>
-</tr>
-<tr class="list visibility-published">
 <td class="itemcode"><code>function <strong><a href="TreeTypes.html#initialiseTree-Cardinal-LongInt-">initialiseTree</a></strong>(seed: Cardinal; targetTime: LongInt): <a href="TreeTypes.TTree.html">TTree</a>;</code></td>
 </tr>
 <tr class="list2 visibility-published">
@@ -239,24 +233,6 @@ Removes the branch at index <strong>idx</strong>.
 <tr><td colspan="1">
 <p>
 Returns the number of branches currently stored in tree.</p>
-</td></tr>
-</table>
-<table class="detail visibility-published wide_list">
-<tr class="list visibility-published">
-<td class="itemcode"><span id="getShootCooldown-TBranch-"></span><code>function <strong>getShootCooldown</strong>(branch: <a href="TreeTypes.TBranch.html">TBranch</a>): LongInt;</code></td>
-</tr>
-<tr><td colspan="1">
-<p>
-Returns the current number of growth steps remaining before the branch can make another shoot.</p>
-</td></tr>
-</table>
-<table class="detail visibility-published wide_list">
-<tr class="list visibility-published">
-<td class="itemcode"><span id="setShootCooldown-TBranch-LongInt-"></span><code>procedure <strong>setShootCooldown</strong>(var branch: <a href="TreeTypes.TBranch.html">TBranch</a>; shootCooldown: LongInt);</code></td>
-</tr>
-<tr><td colspan="1">
-<p>
-Sets the number of growth steps remaining before the branch can make another shoot</p>
 </td></tr>
 </table>
 <table class="detail visibility-published wide_list">

@@ -19,11 +19,18 @@ const
     MAX_BRANCHES = 1000;
     MAX_POINTS = 10000;
     MAX_INT = $7FFFFFFF;
+    RESUME_BASE = -1;
 
 function generateRandomRoll(var tree: TTree; maximum: Cardinal): LongInt;
 var 
     randomState: Cardinal;
 begin 
+    if maximum = 0 then
+    begin 
+        generateRandomRoll := 0;
+        Exit;
+    end;
+
     randomState := getRandomState(tree);
     randomState := randomState * 1664525 + 1013904223;
     setRandomState(tree, randomState);
@@ -44,10 +51,10 @@ procedure createBranch(var tree: TTree; coord: TCoord; state: TState; remainingL
 var 
     branch: TBranch;
 begin 
-    if getBranchCount(tree) >= MAX_BRANCHES then 
+    if (remainingLife <= 0) or (getBranchCount(tree) >= MAX_BRANCHES) then 
         Exit;
     branch := initialiseBranch(coord, remainingLife, state);
-    setShootCooldown(branch, MULTIPLIER);
+    branch.shootCooldown := MULTIPLIER;
     setBranch(tree, getBranchCount(tree), branch);
 end;
 
@@ -76,104 +83,74 @@ begin
         end
         else if branch.age < MULTIPLIER * 3 then 
         begin 
-            if ((MULTIPLIER div 2) <> 0) and (branch.age mod (MULTIPLIER div 2) = 0) then 
-                dy := -1
-            else 
-                dy := 0;
+            if ((MULTIPLIER div 2) <> 0) and (branch.age mod (MULTIPLIER div 2) = 0) then dy := -1
+            else dy := 0;
+
             dice := generateRandomRoll(tree, 10);
-            if dice = 0 then 
-                dx := -2
-            else if dice <= 3 then 
-                dx := -1
-            else if dice <= 5 then 
-                dx := 0 
-            else if dice <= 8 then 
-                dx := 1
-            else 
-                dx := 2;
+            if dice = 0 then dx := -2
+            else if dice <= 3 then dx := -1
+            else if dice <= 5 then dx := 0 
+            else if dice <= 8 then dx := 1
+            else dx := 2;
         end
         else 
         begin 
             dice := generateRandomRoll(tree, 10);
-            if dice > 2 then 
-                dy := -1
-            else
-                dy := 0;
+            if dice > 2 then dy := -1
+            else dy := 0;
+
             dx := generateRandomRoll(tree, 3) - 1;
         end;
     end
     else if branch.state = Left then 
     begin 
         dice := generateRandomRoll(tree, 10);
-        if dice <= 1 then 
-            dy := -1
-        else if dice <= 7 then 
-            dy := 0
-        else 
-            dy := 1;
+        if dice <= 1 then dy := -1
+        else if dice <= 7 then dy := 0
+        else dy := 1;
+
         dice := generateRandomRoll(tree, 10);
-        if dice <= 1 then 
-            dx := -2
-        else if dice <= 5 then 
-            dx := -1
-        else if dice <= 8 then 
-            dx := 0
-        else 
-            dx := 1;
+        if dice <= 1 then dx := -2
+        else if dice <= 5 then dx := -1
+        else if dice <= 8 then dx := 0
+        else dx := 1;
     end
     else if branch.state = Right then 
     begin 
         dice := generateRandomRoll(tree, 10);
-        if dice <= 1 then 
-            dy := -1
-        else if dice <= 7 then 
-            dy := 0
-        else 
-            dy := 1;
+        if dice <= 1 then dy := -1
+        else if dice <= 7 then dy := 0
+        else dy := 1;
+
         dice := generateRandomRoll(tree, 10);
-        if dice <= 1 then 
-            dx := 2
-        else if dice <= 5 then 
-            dx := 1
-        else if dice <= 8 then 
-            dx := 0
-        else 
-            dx := -1;
+        if dice <= 1 then dx := 2
+        else if dice <= 5 then dx := 1
+        else if dice <= 8 then dx := 0
+        else dx := -1;
     end
     else if branch.state = Dying then 
     begin 
         dice := generateRandomRoll(tree, 10);
-        if dice <= 1 then 
-            dy := -1
-        else if dice <= 8 then 
-            dy := 0
-        else 
-            dy := 1;
+        if dice <= 1 then dy := -1
+        else if dice <= 8 then dy := 0
+        else dy := 1;
+
         dice := generateRandomRoll(tree, 15);
-        if dice = 0 then 
-            dx := -3 
-        else if dice <= 2 then 
-            dx := -2 
-        else if dice <= 5 then 
-            dx := -1 
-        else if dice <= 8 then 
-            dx := 0 
-        else if dice <= 11 then 
-            dx := 1
-        else if dice <= 13 then 
-            dx := 2 
-        else 
-            dx := 3;
+        if dice = 0 then dx := -3 
+        else if dice <= 2 then dx := -2 
+        else if dice <= 5 then dx := -1 
+        else if dice <= 8 then dx := 0 
+        else if dice <= 11 then dx := 1
+        else if dice <= 13 then dx := 2 
+        else dx := 3;
     end
     else 
     begin 
         dice := generateRandomRoll(tree, 10);
-        if dice <= 2 then 
-            dy := -1
-        else if dice <= 6 then 
-            dy := 0 
-        else 
-            dy := 1;
+        if dice <= 2 then dy := -1
+        else if dice <= 6 then dy := 0 
+        else dy := 1;
+
         dx := generateRandomRoll(tree, 3) - 1;
     end;
 end;
@@ -185,45 +162,29 @@ begin
     
     if state = Trunk then 
     begin 
-        if dy = 0 then 
-            chooseCharacter := '~'
-        else if dx < 0 then 
-            chooseCharacter := '\'
-        else if dx = 0 then 
-            chooseCharacter := '|'
-        else 
-            chooseCharacter := '/';
+        if dy = 0 then chooseCharacter := '~'
+        else if dx < 0 then chooseCharacter := '\'
+        else if dx = 0 then chooseCharacter := '|'
+        else chooseCharacter := '/';
     end
     else if state = Left then 
     begin 
-        if dy > 0 then 
-            chooseCharacter := '\'
-        else if dy = 0 then 
-            chooseCharacter := '_'
-        else if dx < 0 then 
-            chooseCharacter := '\'
-        else if dx = 0 then 
-            chooseCharacter := '|'
-        else 
-            chooseCharacter := '/';
+        if dy > 0 then chooseCharacter := '\'
+        else if dy = 0 then chooseCharacter := '_'
+        else if dx < 0 then chooseCharacter := '\'
+        else if dx = 0 then chooseCharacter := '|'
+        else chooseCharacter := '/';
     end 
     else if state = Right then 
     begin 
-        if dy > 0 then 
-            chooseCharacter := '/'
-        else if dy = 0 then 
-            chooseCharacter := '_'
-        else if dx < 0 then 
-            chooseCharacter := '\'
-        else if dx = 0 then 
-            chooseCharacter := '|'
-        else 
-            chooseCharacter := '/';
+        if dy > 0 then chooseCharacter := '/'
+        else if dy = 0 then chooseCharacter := '_'
+        else if dx < 0 then chooseCharacter := '\'
+        else if dx = 0 then chooseCharacter := '|'
+        else chooseCharacter := '/';
     end 
-    else if state = Dying then 
-        chooseCharacter := '*'
-    else 
-        chooseCharacter := '.'
+    else if state = Dying then chooseCharacter := '*'
+    else chooseCharacter := '.'
 end;
 
 procedure createTrunkContinuation(var tree: TTree; branch: TBranch);
@@ -241,10 +202,8 @@ var
 begin 
     shootLife := branch.remainingLife + MULTIPLIER;
     setShootCounter(tree, getShootCounter(tree) + 1);
-    if (getShootCounter(tree) mod 2 = 0) then 
-        shootState := Left
-    else 
-        shootState := Right;
+    if (getShootCounter(tree) mod 2 = 0) then shootState := Left
+    else shootState := Right;
     createBranch(tree, branch.coord, shootState, shootLife);
 end;
 
@@ -268,46 +227,85 @@ begin
             if (dice = 0) and (branch.remainingLife > 7) then 
             begin 
                 createTrunkContinuation(tree, branch);
-                setShootCooldown(branch, MULTIPLIER * 2);
+                branch.shootCooldown := MULTIPLIER * 2;
             end 
-            else if getShootCooldown(branch) <= 0 then 
+            else if branch.shootCooldown <= 0 then 
             begin 
                 createShoot(tree, branch);
-                setShootCooldown(branch, MULTIPLIER * 2);
+                branch.shootCooldown := MULTIPLIER * 2;
             end;
         end;
     end;
 end;
 
-procedure processBranchStep(var tree: TTree; idx: LongInt);
-var 
-    branch: TBranch;
-    dx, dy: LongInt;
-    character: Char;
-    newCoord: TCoord;
+function encodeResumeDelta(dx, dy: LongInt): LongInt;
 begin 
-    if (idx < 0) or (idx >= getBranchCount(tree)) then 
-        Exit;
+    encodeResumeDelta := RESUME_BASE - ((dx + 3) * 3 + (dy + 1));
+end;
 
-    branch := getBranch(tree, idx);
-    branch.remainingLife := branch.remainingLife - 1;
+procedure decodeResumeDelta(encodedAge: LongInt; var dx, dy: LongInt);
+var 
+    val: LongInt;
+begin 
+    val := -(encodedAge + 1);
+    dx := (val div 3) - 3;
+    dy := (val mod 3) - 1;
+end;
+
+function hasCreatedChild(oldBranchCount, newBranchCount: LongInt): Boolean;
+begin 
+    hasCreatedChild := newBranchCount > oldBranchCount;
+end;
+
+procedure finishBranchStep(var tree: TTree; idx: LongInt; var branch: TBranch; dx, dy: LongInt);
+var 
+    newCoord: TCoord;
+    character: Char;
+begin 
     branch.age := INITIAL_LIFE - branch.remainingLife;
-
-    calculateDeltas(tree, branch, dx, dy);
-    processBranching(tree, branch);
     branch.shootCooldown := branch.shootCooldown - 1;
-
     newCoord.x := branch.coord.x + dx;
     newCoord.y := branch.coord.y + dy;
-
     character := chooseCharacter(branch.state, branch.remainingLife, dx, dy);
     createPoint(tree, newCoord, character, branch.state);
-
     branch.coord := newCoord;
     if branch.remainingLife > 0 then 
         setBranch(tree, idx, branch)
     else 
         removeBranch(tree, idx);
+end;
+
+procedure processBranchStep(var tree: TTree; idx: LongInt);
+var 
+    branch: TBranch;
+    dx, dy, oldBranchCount: LongInt;
+begin 
+    if (idx < 0) or (idx >= getBranchCount(tree)) then 
+        Exit;
+
+    branch := getBranch(tree, idx);
+    
+    if branch.age < 0 then 
+    begin 
+        decodeResumeDelta(branch.age, dx, dy);
+        finishBranchStep(tree, idx, branch, dx, dy);
+        Exit;
+    end;
+
+    branch.remainingLife := branch.remainingLife - 1;
+    branch.age := INITIAL_LIFE - branch.remainingLife;
+    calculateDeltas(tree, branch, dx, dy);
+    oldBranchCount := getBranchCount(tree);
+    processBranching(tree, branch);
+
+    if hasCreatedChild(oldBranchCount, getBranchCount(tree)) then 
+    begin 
+        branch.age := encodeResumeDelta(dx, dy);
+        setBranch(tree, idx, branch);
+        Exit;
+    end;
+
+    finishBranchStep(tree, idx, branch, dx, dy);
 end;
 
 procedure growTree(var tree: TTree; elapsedTime: LongInt);
@@ -324,7 +322,7 @@ begin
         targetGrowthTime := getTargetTime(tree);
     if targetGrowthTime <= getGrowthTime(tree) then 
         Exit;
-    if getPointCount(tree) = 0 then 
+    if (getPointCount(tree) = 0) and (getBranchCount(tree) = 0) then 
         initialiseGrowth(tree);
     
     previousStep := getGrowthTime(tree) div GROWTH_INTERVAL;
