@@ -49,14 +49,14 @@ begin
                 (area.yMin >= 1) and (area.yMax <= 255) and (area.yMin < area.yMax);
 end;
 
-function convertX(coord: TCoord; area: TDisplayArea): LongInt;
+function convertToTerminalX(coord: TCoord; area: TDisplayArea): LongInt;
 begin 
-    convertX := ((area.xMin + area.xMax) div 2) + coord.x;
+    convertToTerminalX := ((area.xMin + area.xMax) div 2) + coord.x;
 end;
 
-function convertY(coord: TCoord; area: TDisplayArea): LongInt;
+function convertToTerminalY(coord: TCoord; area: TDisplayArea): LongInt;
 begin 
-    convertY := area.yMax - 1 + coord.y;
+    convertToTerminalY := area.yMax - 1 + coord.y;
 end;
 
 
@@ -64,8 +64,8 @@ function isInsideTreeArea(coord: TCoord; area: TDisplayArea): Boolean;
 var 
     terminalX, terminalY: LongInt;
 begin 
-    terminalX := convertX(coord, area);
-    terminalY := convertY(coord, area);
+    terminalX := convertToTerminalX(coord, area);
+    terminalY := convertToTerminalY(coord, area);
     isInsideTreeArea := (terminalX > area.xMin) and (terminalX < area.xMax) and (terminalY > area.yMin) and (terminalY < area.yMax);
 end;
 
@@ -86,8 +86,8 @@ var
     x: LongInt;
 begin 
     GotoXY(xMin, y);
-    Write('+');
     TextColor(BORDER_COLOR);
+    Write('+');
     for x := xMin + 1 to xMax - 1 do 
         write('-');
     write('+');
@@ -140,19 +140,28 @@ end;
 procedure drawPoint(point: TPoint; area: TDisplayArea; idx: LongInt);
 var 
     terminalX, terminalY: LongInt;
+    characters: String;
 begin 
     if not isInsideTreeArea(point.coord, area) then 
         Exit;
 
-    terminalX := convertX(point.coord, area);
-    terminalY := convertY(point.coord, area);
+    terminalX := convertToTerminalX(point.coord, area);
+    terminalY := convertToTerminalY(point.coord, area);
 
-    if (terminalX <= area.xMin) or (terminalX >= area.xMax) or (terminalY <= area.yMin) or (terminalY >= area.xMax) then 
+    if (terminalX <= area.xMin) or (terminalX >= area.xMax) or (terminalY <= area.yMin) or (terminalY >= area.yMax) then 
+        Exit;
+
+    characters := point.characters;
+
+    if length(characters) > area.xMax - terminalX then 
+        characters := Copy(characters, 1, area.xMax - terminalX);
+
+    if characters = '' then 
         Exit;
 
     GoToXY(terminalX, terminalY);
     TextColor(getPointColor(point, idx));
-    write(point.character);
+    write(characters);
 end;
 
 procedure drawTree(tree: TTree; area: TDisplayArea);

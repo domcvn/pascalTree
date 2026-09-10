@@ -3,8 +3,7 @@ unit TreeGenerator;
 
 interface
 
-uses 
-    TreeTypes;
+uses TreeTypes;
 
 { Advances the growth of @bold(tree) according to the elapsed time.
 
@@ -13,12 +12,12 @@ procedure growTree(var tree: TTree; elapsedTime: LongInt);
 
 implementation
 const 
-    GROWTH_INTERVAL = 5;
-    INITIAL_LIFE = 32;
-    MULTIPLIER = 5;
-    MAX_BRANCHES = 1000;
-    MAX_POINTS = 10000;
+    GROWTH_INTERVAL = 1;
+    MULTIPLIER = 3;
+    MAX_BRANCHES = 10000;
+    MAX_POINTS = 1000000;
     MAX_INT = $7FFFFFFF;
+    INITIAL_LIFE = 32;
     RESUME_BASE = -1;
 
 function generateRandomRoll(var tree: TTree; maximum: Cardinal): LongInt;
@@ -37,13 +36,13 @@ begin
     generateRandomRoll := LongInt(randomState mod maximum);
 end;
 
-procedure createPoint(var tree: TTree; coord: TCoord; character: Char; state: TState);
+procedure createPoint(var tree: TTree; coord: TCoord; characters: String; state: TState);
 var 
     point: TPoint;
 begin 
     if getPointCount(tree) >= MAX_POINTS then 
         Exit;
-    point := initialisePoint(coord, character, state);
+    point := initialisePoint(coord, characters, state);
     setPoint(tree, getPointCount(tree), point);
 end;
 
@@ -67,7 +66,7 @@ begin
     createBranch(tree, coord, Trunk, INITIAL_LIFE);
 end;
 
-procedure calculateDeltas(var tree: TTree; branch: TBranch; var dx, dy: LongInt);
+procedure calculateMovement(var tree: TTree; branch: TBranch; var dx, dy: LongInt);
 var 
     dice: LongInt;
 begin 
@@ -153,38 +152,40 @@ begin
 
         dx := generateRandomRoll(tree, 3) - 1;
     end;
+
+    if (dy > 0) and (branch.coord.y >= 0) then
+        dy := dy - 1;
 end;
 
-function chooseCharacter(state: TState; remainingLife: LongInt; dx, dy: LongInt): Char;
+function getBranchCharacters(state: TState; remainingLife: LongInt; dx, dy: LongInt): String;
 begin 
     if remainingLife < 4 then 
         state := Dying;
     
     if state = Trunk then 
     begin 
-        if dy = 0 then chooseCharacter := '~'
-        else if dx < 0 then chooseCharacter := '\'
-        else if dx = 0 then chooseCharacter := '|'
-        else chooseCharacter := '/';
+        if dy = 0 then getBranchCharacters := '/~'
+        else if dx < 0 then getBranchCharacters := '\|'
+        else if dx = 0 then getBranchCharacters := '/|\'
+        else getBranchCharacters := '|/';
     end
     else if state = Left then 
     begin 
-        if dy > 0 then chooseCharacter := '\'
-        else if dy = 0 then chooseCharacter := '_'
-        else if dx < 0 then chooseCharacter := '\'
-        else if dx = 0 then chooseCharacter := '|'
-        else chooseCharacter := '/';
+        if dy > 0 then getBranchCharacters := '\'
+        else if dy = 0 then getBranchCharacters := '\_'
+        else if dx < 0 then getBranchCharacters := '\|'
+        else if dx = 0 then getBranchCharacters := '/|'
+        else getBranchCharacters := '/';
     end 
     else if state = Right then 
     begin 
-        if dy > 0 then chooseCharacter := '/'
-        else if dy = 0 then chooseCharacter := '_'
-        else if dx < 0 then chooseCharacter := '\'
-        else if dx = 0 then chooseCharacter := '|'
-        else chooseCharacter := '/';
+        if dy > 0 then getBranchCharacters := '/'
+        else if dy = 0 then getBranchCharacters := '_/'
+        else if dx < 0 then getBranchCharacters := '\|'
+        else if dx = 0 then getBranchCharacters := '/|'
+        else getBranchCharacters := '/';
     end 
-    else if state = Dying then chooseCharacter := '*'
-    else chooseCharacter := '.'
+    else getBranchCharacters := '*'
 end;
 
 procedure createTrunkContinuation(var tree: TTree; branch: TBranch);
@@ -220,7 +221,7 @@ begin
     else if branch.state = Trunk then 
     begin 
         dice := generateRandomRoll(tree, 3);
-        if (dice = 0) or ((MULTIPLIER <> 0) and ((branch.remainingLife mod MULTIPLIER) = 0)) then 
+        if (dice = 0) or ((branch.remainingLife mod MULTIPLIER) = 0) then 
         begin
             dice := generateRandomRoll(tree, 8);
 
@@ -239,35 +240,35 @@ begin
 end;
 
 function encodeResumeDelta(dx, dy: LongInt): LongInt;
-begin 
+begin
     encodeResumeDelta := RESUME_BASE - ((dx + 3) * 3 + (dy + 1));
 end;
 
 procedure decodeResumeDelta(encodedAge: LongInt; var dx, dy: LongInt);
-var 
-    val: LongInt;
-begin 
-    val := -(encodedAge + 1);
-    dx := (val div 3) - 3;
-    dy := (val mod 3) - 1;
+var
+    value: LongInt;
+begin
+    value := -(encodedAge + 1);
+    dx := (value div 3) - 3;
+    dy := (value mod 3) - 1;
 end;
 
 function hasCreatedChild(oldBranchCount, newBranchCount: LongInt): Boolean;
-begin 
+begin
     hasCreatedChild := newBranchCount > oldBranchCount;
 end;
 
-procedure finishBranchStep(var tree: TTree; idx: LongInt; var branch: TBranch; dx, dy: LongInt);
+procedure finishGrowthStep(var tree: TTree; idx: LongInt; var branch: TBranch; dx, dy: LongInt);
 var 
     newCoord: TCoord;
-    character: Char;
+    characters: String;
 begin 
     branch.age := INITIAL_LIFE - branch.remainingLife;
     branch.shootCooldown := branch.shootCooldown - 1;
     newCoord.x := branch.coord.x + dx;
     newCoord.y := branch.coord.y + dy;
-    character := chooseCharacter(branch.state, branch.remainingLife, dx, dy);
-    createPoint(tree, newCoord, character, branch.state);
+    characters := getBranchCharacters(branch.state, branch.remainingLife, dx, dy);
+    createPoint(tree, newCoord, characters, branch.state);
     branch.coord := newCoord;
     if branch.remainingLife > 0 then 
         setBranch(tree, idx, branch)
@@ -275,7 +276,7 @@ begin
         removeBranch(tree, idx);
 end;
 
-procedure processBranchStep(var tree: TTree; idx: LongInt);
+procedure processGrowthStep(var tree: TTree; idx: LongInt);
 var 
     branch: TBranch;
     dx, dy, oldBranchCount: LongInt;
@@ -285,34 +286,32 @@ begin
 
     branch := getBranch(tree, idx);
     
-    if branch.age < 0 then 
-    begin 
+    if branch.age < 0 then
+    begin
         decodeResumeDelta(branch.age, dx, dy);
-        finishBranchStep(tree, idx, branch, dx, dy);
+        finishGrowthStep(tree, idx, branch, dx, dy);
         Exit;
     end;
 
     branch.remainingLife := branch.remainingLife - 1;
     branch.age := INITIAL_LIFE - branch.remainingLife;
-    calculateDeltas(tree, branch, dx, dy);
+    calculateMovement(tree, branch, dx, dy);
     oldBranchCount := getBranchCount(tree);
     processBranching(tree, branch);
 
-    if hasCreatedChild(oldBranchCount, getBranchCount(tree)) then 
-    begin 
+    if hasCreatedChild(oldBranchCount, getBranchCount(tree)) then
+    begin
         branch.age := encodeResumeDelta(dx, dy);
         setBranch(tree, idx, branch);
         Exit;
     end;
 
-    finishBranchStep(tree, idx, branch, dx, dy);
+    finishGrowthStep(tree, idx, branch, dx, dy);
 end;
 
 procedure growTree(var tree: TTree; elapsedTime: LongInt);
 var 
-    targetGrowthTime: LongInt;
-    previousStep: LongInt;
-    currentStep: LongInt;
+    targetGrowthTime, previousStep, currentStep: LongInt;
 begin 
     if elapsedTime <= getGrowthTime(tree) then 
         Exit;
@@ -330,9 +329,9 @@ begin
 
     while previousStep < currentStep do
     begin 
-        if getBranchCount(tree) = 0 then 
+        if getBranchCount(tree) = 0 then
             Break;
-        processBranchStep(tree, getBranchCount(tree) - 1);
+        processGrowthStep(tree, getBranchCount(tree) - 1);
         previousStep := previousStep + 1;
     end;
 

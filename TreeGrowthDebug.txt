@@ -1,0 +1,468 @@
+TREE GROWTH DEBUG
+=================
+
+Session duration : 60 minutes
+Session time     : 3600 seconds
+Seed             : 1003195503
+Checkpoints      : 10
+Border           : 60 x 30
+Reference growth time: 2395 seconds
+
+========================================
+CHECKPOINT 1/10
+========================================
+Session time : 360 seconds
+Growth time  : 235 seconds
+Seed         : 1003195503
+Random state : 1444120826
+Points       : 41
+Branches     : 3
+Shoots       : 378556163
+
+Point states
+------------
+Trunk : 6
+Left  : 0
+Right : 24
+Dying : 7
+Dead  : 4
+
+Border verification
+-------------------
+Border size: 60 x 30
+PASS: tree is completely inside the border.
+
+========================================
+CHECKPOINT 2/10
+========================================
+Session time : 720 seconds
+Growth time  : 475 seconds
+Seed         : 1003195503
+Random state : 1603710010
+Points       : 75
+Branches     : 1
+Shoots       : 378556163
+
+Point states
+------------
+Trunk : 7
+Left  : 0
+Right : 30
+Dying : 18
+Dead  : 20
+
+Border verification
+-------------------
+Border size: 60 x 30
+FAIL: 24 tree points are outside the border.
+  Point 41: coordinate=(30,-5) terminal=(60,24) state=Dying characters="*"
+  Point 42: coordinate=(30,-6) terminal=(60,23) state=Dead characters="*"
+  Point 44: coordinate=(30,-5) terminal=(60,24) state=Dead characters="*"
+  Point 45: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 46: coordinate=(32,-5) terminal=(62,24) state=Dead characters="*"
+  Point 47: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 48: coordinate=(30,-4) terminal=(60,25) state=Dying characters="*"
+  Point 49: coordinate=(30,-4) terminal=(60,25) state=Right characters="_/"
+  Point 58: coordinate=(31,-4) terminal=(61,25) state=Right characters="_/"
+  Point 59: coordinate=(30,-4) terminal=(60,25) state=Dead characters="*"
+  Point 60: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 61: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 62: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 63: coordinate=(34,-4) terminal=(64,25) state=Dead characters="*"
+  Point 64: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 65: coordinate=(37,-3) terminal=(67,26) state=Dying characters="*"
+  Point 66: coordinate=(33,-3) terminal=(63,26) state=Right characters="*"
+  Point 67: coordinate=(33,-3) terminal=(63,26) state=Dead characters="*"
+  Point 68: coordinate=(34,-2) terminal=(64,27) state=Dead characters="*"
+  Point 69: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 70: coordinate=(35,-2) terminal=(65,27) state=Right characters="*"
+  Point 71: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 72: coordinate=(37,-2) terminal=(67,27) state=Right characters="*"
+  Point 73: coordinate=(39,-1) terminal=(69,28) state=Right characters="*"
+
+========================================
+CHECKPOINT 3/10
+========================================
+Session time : 1080 seconds
+Growth time  : 715 seconds
+Seed         : 1003195503
+Random state : 2812196611
+Points       : 113
+Branches     : 4
+Shoots       : 378556164
+
+Point states
+------------
+Trunk : 13
+Left  : 15
+Right : 30
+Dying : 27
+Dead  : 28
+
+Border verification
+-------------------
+Border size: 60 x 30
+FAIL: 24 tree points are outside the border.
+  Point 41: coordinate=(30,-5) terminal=(60,24) state=Dying characters="*"
+  Point 42: coordinate=(30,-6) terminal=(60,23) state=Dead characters="*"
+  Point 44: coordinate=(30,-5) terminal=(60,24) state=Dead characters="*"
+  Point 45: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 46: coordinate=(32,-5) terminal=(62,24) state=Dead characters="*"
+  Point 47: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 48: coordinate=(30,-4) terminal=(60,25) state=Dying characters="*"
+  Point 49: coordinate=(30,-4) terminal=(60,25) state=Right characters="_/"
+  Point 58: coordinate=(31,-4) terminal=(61,25) state=Right characters="_/"
+  Point 59: coordinate=(30,-4) terminal=(60,25) state=Dead characters="*"
+  Point 60: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 61: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 62: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 63: coordinate=(34,-4) terminal=(64,25) state=Dead characters="*"
+  Point 64: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 65: coordinate=(37,-3) terminal=(67,26) state=Dying characters="*"
+  Point 66: coordinate=(33,-3) terminal=(63,26) state=Right characters="*"
+  Point 67: coordinate=(33,-3) terminal=(63,26) state=Dead characters="*"
+  Point 68: coordinate=(34,-2) terminal=(64,27) state=Dead characters="*"
+  Point 69: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 70: coordinate=(35,-2) terminal=(65,27) state=Right characters="*"
+  Point 71: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 72: coordinate=(37,-2) terminal=(67,27) state=Right characters="*"
+  Point 73: coordinate=(39,-1) terminal=(69,28) state=Right characters="*"
+
+========================================
+CHECKPOINT 4/10
+========================================
+Session time : 1440 seconds
+Growth time  : 955 seconds
+Seed         : 1003195503
+Random state : 3876468733
+Points       : 150
+Branches     : 2
+Shoots       : 378556164
+
+Point states
+------------
+Trunk : 23
+Left  : 21
+Right : 30
+Dying : 36
+Dead  : 40
+
+Border verification
+-------------------
+Border size: 60 x 30
+FAIL: 24 tree points are outside the border.
+  Point 41: coordinate=(30,-5) terminal=(60,24) state=Dying characters="*"
+  Point 42: coordinate=(30,-6) terminal=(60,23) state=Dead characters="*"
+  Point 44: coordinate=(30,-5) terminal=(60,24) state=Dead characters="*"
+  Point 45: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 46: coordinate=(32,-5) terminal=(62,24) state=Dead characters="*"
+  Point 47: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 48: coordinate=(30,-4) terminal=(60,25) state=Dying characters="*"
+  Point 49: coordinate=(30,-4) terminal=(60,25) state=Right characters="_/"
+  Point 58: coordinate=(31,-4) terminal=(61,25) state=Right characters="_/"
+  Point 59: coordinate=(30,-4) terminal=(60,25) state=Dead characters="*"
+  Point 60: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 61: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 62: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 63: coordinate=(34,-4) terminal=(64,25) state=Dead characters="*"
+  Point 64: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 65: coordinate=(37,-3) terminal=(67,26) state=Dying characters="*"
+  Point 66: coordinate=(33,-3) terminal=(63,26) state=Right characters="*"
+  Point 67: coordinate=(33,-3) terminal=(63,26) state=Dead characters="*"
+  Point 68: coordinate=(34,-2) terminal=(64,27) state=Dead characters="*"
+  Point 69: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 70: coordinate=(35,-2) terminal=(65,27) state=Right characters="*"
+  Point 71: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 72: coordinate=(37,-2) terminal=(67,27) state=Right characters="*"
+  Point 73: coordinate=(39,-1) terminal=(69,28) state=Right characters="*"
+
+========================================
+CHECKPOINT 5/10
+========================================
+Session time : 1800 seconds
+Growth time  : 1195 seconds
+Seed         : 1003195503
+Random state : 2383714604
+Points       : 183
+Branches     : 3
+Shoots       : 378556164
+
+Point states
+------------
+Trunk : 26
+Left  : 21
+Right : 30
+Dying : 51
+Dead  : 55
+
+Border verification
+-------------------
+Border size: 60 x 30
+FAIL: 24 tree points are outside the border.
+  Point 41: coordinate=(30,-5) terminal=(60,24) state=Dying characters="*"
+  Point 42: coordinate=(30,-6) terminal=(60,23) state=Dead characters="*"
+  Point 44: coordinate=(30,-5) terminal=(60,24) state=Dead characters="*"
+  Point 45: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 46: coordinate=(32,-5) terminal=(62,24) state=Dead characters="*"
+  Point 47: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 48: coordinate=(30,-4) terminal=(60,25) state=Dying characters="*"
+  Point 49: coordinate=(30,-4) terminal=(60,25) state=Right characters="_/"
+  Point 58: coordinate=(31,-4) terminal=(61,25) state=Right characters="_/"
+  Point 59: coordinate=(30,-4) terminal=(60,25) state=Dead characters="*"
+  Point 60: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 61: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 62: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 63: coordinate=(34,-4) terminal=(64,25) state=Dead characters="*"
+  Point 64: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 65: coordinate=(37,-3) terminal=(67,26) state=Dying characters="*"
+  Point 66: coordinate=(33,-3) terminal=(63,26) state=Right characters="*"
+  Point 67: coordinate=(33,-3) terminal=(63,26) state=Dead characters="*"
+  Point 68: coordinate=(34,-2) terminal=(64,27) state=Dead characters="*"
+  Point 69: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 70: coordinate=(35,-2) terminal=(65,27) state=Right characters="*"
+  Point 71: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 72: coordinate=(37,-2) terminal=(67,27) state=Right characters="*"
+  Point 73: coordinate=(39,-1) terminal=(69,28) state=Right characters="*"
+
+========================================
+CHECKPOINT 6/10
+========================================
+Session time : 2160 seconds
+Growth time  : 1435 seconds
+Seed         : 1003195503
+Random state : 3759278946
+Points       : 223
+Branches     : 3
+Shoots       : 378556165
+
+Point states
+------------
+Trunk : 41
+Left  : 21
+Right : 40
+Dying : 58
+Dead  : 63
+
+Border verification
+-------------------
+Border size: 60 x 30
+FAIL: 24 tree points are outside the border.
+  Point 41: coordinate=(30,-5) terminal=(60,24) state=Dying characters="*"
+  Point 42: coordinate=(30,-6) terminal=(60,23) state=Dead characters="*"
+  Point 44: coordinate=(30,-5) terminal=(60,24) state=Dead characters="*"
+  Point 45: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 46: coordinate=(32,-5) terminal=(62,24) state=Dead characters="*"
+  Point 47: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 48: coordinate=(30,-4) terminal=(60,25) state=Dying characters="*"
+  Point 49: coordinate=(30,-4) terminal=(60,25) state=Right characters="_/"
+  Point 58: coordinate=(31,-4) terminal=(61,25) state=Right characters="_/"
+  Point 59: coordinate=(30,-4) terminal=(60,25) state=Dead characters="*"
+  Point 60: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 61: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 62: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 63: coordinate=(34,-4) terminal=(64,25) state=Dead characters="*"
+  Point 64: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 65: coordinate=(37,-3) terminal=(67,26) state=Dying characters="*"
+  Point 66: coordinate=(33,-3) terminal=(63,26) state=Right characters="*"
+  Point 67: coordinate=(33,-3) terminal=(63,26) state=Dead characters="*"
+  Point 68: coordinate=(34,-2) terminal=(64,27) state=Dead characters="*"
+  Point 69: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 70: coordinate=(35,-2) terminal=(65,27) state=Right characters="*"
+  Point 71: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 72: coordinate=(37,-2) terminal=(67,27) state=Right characters="*"
+  Point 73: coordinate=(39,-1) terminal=(69,28) state=Right characters="*"
+
+========================================
+CHECKPOINT 7/10
+========================================
+Session time : 2520 seconds
+Growth time  : 1675 seconds
+Seed         : 1003195503
+Random state : 2399031844
+Points       : 256
+Branches     : 3
+Shoots       : 378556165
+
+Point states
+------------
+Trunk : 41
+Left  : 21
+Right : 44
+Dying : 72
+Dead  : 78
+
+Border verification
+-------------------
+Border size: 60 x 30
+FAIL: 24 tree points are outside the border.
+  Point 41: coordinate=(30,-5) terminal=(60,24) state=Dying characters="*"
+  Point 42: coordinate=(30,-6) terminal=(60,23) state=Dead characters="*"
+  Point 44: coordinate=(30,-5) terminal=(60,24) state=Dead characters="*"
+  Point 45: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 46: coordinate=(32,-5) terminal=(62,24) state=Dead characters="*"
+  Point 47: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 48: coordinate=(30,-4) terminal=(60,25) state=Dying characters="*"
+  Point 49: coordinate=(30,-4) terminal=(60,25) state=Right characters="_/"
+  Point 58: coordinate=(31,-4) terminal=(61,25) state=Right characters="_/"
+  Point 59: coordinate=(30,-4) terminal=(60,25) state=Dead characters="*"
+  Point 60: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 61: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 62: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 63: coordinate=(34,-4) terminal=(64,25) state=Dead characters="*"
+  Point 64: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 65: coordinate=(37,-3) terminal=(67,26) state=Dying characters="*"
+  Point 66: coordinate=(33,-3) terminal=(63,26) state=Right characters="*"
+  Point 67: coordinate=(33,-3) terminal=(63,26) state=Dead characters="*"
+  Point 68: coordinate=(34,-2) terminal=(64,27) state=Dead characters="*"
+  Point 69: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 70: coordinate=(35,-2) terminal=(65,27) state=Right characters="*"
+  Point 71: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 72: coordinate=(37,-2) terminal=(67,27) state=Right characters="*"
+  Point 73: coordinate=(39,-1) terminal=(69,28) state=Right characters="*"
+
+========================================
+CHECKPOINT 8/10
+========================================
+Session time : 2880 seconds
+Growth time  : 1915 seconds
+Seed         : 1003195503
+Random state : 3973494495
+Points       : 291
+Branches     : 3
+Shoots       : 378556165
+
+Point states
+------------
+Trunk : 47
+Left  : 21
+Right : 47
+Dying : 85
+Dead  : 91
+
+Border verification
+-------------------
+Border size: 60 x 30
+FAIL: 24 tree points are outside the border.
+  Point 41: coordinate=(30,-5) terminal=(60,24) state=Dying characters="*"
+  Point 42: coordinate=(30,-6) terminal=(60,23) state=Dead characters="*"
+  Point 44: coordinate=(30,-5) terminal=(60,24) state=Dead characters="*"
+  Point 45: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 46: coordinate=(32,-5) terminal=(62,24) state=Dead characters="*"
+  Point 47: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 48: coordinate=(30,-4) terminal=(60,25) state=Dying characters="*"
+  Point 49: coordinate=(30,-4) terminal=(60,25) state=Right characters="_/"
+  Point 58: coordinate=(31,-4) terminal=(61,25) state=Right characters="_/"
+  Point 59: coordinate=(30,-4) terminal=(60,25) state=Dead characters="*"
+  Point 60: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 61: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 62: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 63: coordinate=(34,-4) terminal=(64,25) state=Dead characters="*"
+  Point 64: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 65: coordinate=(37,-3) terminal=(67,26) state=Dying characters="*"
+  Point 66: coordinate=(33,-3) terminal=(63,26) state=Right characters="*"
+  Point 67: coordinate=(33,-3) terminal=(63,26) state=Dead characters="*"
+  Point 68: coordinate=(34,-2) terminal=(64,27) state=Dead characters="*"
+  Point 69: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 70: coordinate=(35,-2) terminal=(65,27) state=Right characters="*"
+  Point 71: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 72: coordinate=(37,-2) terminal=(67,27) state=Right characters="*"
+  Point 73: coordinate=(39,-1) terminal=(69,28) state=Right characters="*"
+
+========================================
+CHECKPOINT 9/10
+========================================
+Session time : 3240 seconds
+Growth time  : 2155 seconds
+Seed         : 1003195503
+Random state : 596130630
+Points       : 326
+Branches     : 2
+Shoots       : 378556165
+
+Point states
+------------
+Trunk : 58
+Left  : 21
+Right : 47
+Dying : 96
+Dead  : 104
+
+Border verification
+-------------------
+Border size: 60 x 30
+FAIL: 24 tree points are outside the border.
+  Point 41: coordinate=(30,-5) terminal=(60,24) state=Dying characters="*"
+  Point 42: coordinate=(30,-6) terminal=(60,23) state=Dead characters="*"
+  Point 44: coordinate=(30,-5) terminal=(60,24) state=Dead characters="*"
+  Point 45: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 46: coordinate=(32,-5) terminal=(62,24) state=Dead characters="*"
+  Point 47: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 48: coordinate=(30,-4) terminal=(60,25) state=Dying characters="*"
+  Point 49: coordinate=(30,-4) terminal=(60,25) state=Right characters="_/"
+  Point 58: coordinate=(31,-4) terminal=(61,25) state=Right characters="_/"
+  Point 59: coordinate=(30,-4) terminal=(60,25) state=Dead characters="*"
+  Point 60: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 61: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 62: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 63: coordinate=(34,-4) terminal=(64,25) state=Dead characters="*"
+  Point 64: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 65: coordinate=(37,-3) terminal=(67,26) state=Dying characters="*"
+  Point 66: coordinate=(33,-3) terminal=(63,26) state=Right characters="*"
+  Point 67: coordinate=(33,-3) terminal=(63,26) state=Dead characters="*"
+  Point 68: coordinate=(34,-2) terminal=(64,27) state=Dead characters="*"
+  Point 69: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 70: coordinate=(35,-2) terminal=(65,27) state=Right characters="*"
+  Point 71: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 72: coordinate=(37,-2) terminal=(67,27) state=Right characters="*"
+  Point 73: coordinate=(39,-1) terminal=(69,28) state=Right characters="*"
+
+========================================
+CHECKPOINT 10/10
+========================================
+Session time : 3600 seconds
+Growth time  : 2395 seconds
+Seed         : 1003195503
+Random state : 885708596
+Points       : 360
+Branches     : 0
+Shoots       : 378556165
+
+Point states
+------------
+Trunk : 64
+Left  : 21
+Right : 47
+Dying : 108
+Dead  : 120
+
+Border verification
+-------------------
+Border size: 60 x 30
+FAIL: 24 tree points are outside the border.
+  Point 41: coordinate=(30,-5) terminal=(60,24) state=Dying characters="*"
+  Point 42: coordinate=(30,-6) terminal=(60,23) state=Dead characters="*"
+  Point 44: coordinate=(30,-5) terminal=(60,24) state=Dead characters="*"
+  Point 45: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 46: coordinate=(32,-5) terminal=(62,24) state=Dead characters="*"
+  Point 47: coordinate=(31,-5) terminal=(61,24) state=Dying characters="*"
+  Point 48: coordinate=(30,-4) terminal=(60,25) state=Dying characters="*"
+  Point 49: coordinate=(30,-4) terminal=(60,25) state=Right characters="_/"
+  Point 58: coordinate=(31,-4) terminal=(61,25) state=Right characters="_/"
+  Point 59: coordinate=(30,-4) terminal=(60,25) state=Dead characters="*"
+  Point 60: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 61: coordinate=(32,-4) terminal=(62,25) state=Dead characters="*"
+  Point 62: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 63: coordinate=(34,-4) terminal=(64,25) state=Dead characters="*"
+  Point 64: coordinate=(34,-4) terminal=(64,25) state=Dying characters="*"
+  Point 65: coordinate=(37,-3) terminal=(67,26) state=Dying characters="*"
+  Point 66: coordinate=(33,-3) terminal=(63,26) state=Right characters="*"
+  Point 67: coordinate=(33,-3) terminal=(63,26) state=Dead characters="*"
+  Point 68: coordinate=(34,-2) terminal=(64,27) state=Dead characters="*"
+  Point 69: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 70: coordinate=(35,-2) terminal=(65,27) state=Right characters="*"
+  Point 71: coordinate=(35,-2) terminal=(65,27) state=Dead characters="*"
+  Point 72: coordinate=(37,-2) terminal=(67,27) state=Right characters="*"
+  Point 73: coordinate=(39,-1) terminal=(69,28) state=Right characters="*"
+PASS: final progressive tree is identical
+      to the canonical final tree.
+Final growth time: 2395 seconds

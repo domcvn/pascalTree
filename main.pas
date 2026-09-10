@@ -10,18 +10,25 @@ uses
 const
     MAX_INT = $7FFFFFFF;
 
-    { Fixed seed used only to test determinism. }
+    { Fixed seed used to test deterministic generation. }
     DETERMINISTIC_SEED = 12345;
 
     { General test values. }
     TEST_TARGET_TIME = 160;
     FULL_TARGET_TIME = 5000;
 
-    { Tree display area. }
-    DISPLAY_X_MIN = 2;
-    DISPLAY_X_MAX = 60;
-    DISPLAY_Y_MIN = 2;
-    DISPLAY_Y_MAX = 31;
+    { The display border is exactly 80 x 40. }
+    DISPLAY_X_MIN = 1;
+    DISPLAY_X_MAX = 80;
+    DISPLAY_Y_MIN = 1;
+    DISPLAY_Y_MAX = 40;
+
+    { The tree generator uses one fixed growth timeline.
+      Session duration does not change the amount of tree growth per
+      interval. It only changes the real time between intervals. }
+    REFERENCE_GROWTH_TIME = FULL_TARGET_TIME;
+    INTERVAL_COUNT = 10;
+
 
 var
     randomSeed: Cardinal;
@@ -40,13 +47,23 @@ begin
     if (x < 1) or (y < 1) then
         Exit;
 
+    if y > WindMaxY then
+        Exit;
+
+    if x > WindMaxX then
+        Exit;
+
     GotoXY(x, y);
     Write(text);
 end;
 
 procedure pauseScreen;
 begin
-    printAt(1, 35, 'Press any key to continue...');
+    if WindMaxY >= DISPLAY_Y_MAX + 1 then
+        printAt(1, DISPLAY_Y_MAX + 1, 'Press any key to continue...')
+    else
+        printAt(1, WindMaxY, 'Press any key to continue...');
+
     ReadKey;
 end;
 
@@ -96,6 +113,18 @@ begin
         1,
         y,
         '[FAIL] ' + message
+    );
+end;
+
+procedure printWarning(
+    const message: String;
+    y: LongInt
+);
+begin
+    printAt(
+        1,
+        y,
+        '[WARN] ' + message
     );
 end;
 
@@ -245,7 +274,7 @@ var
     retrievedBranch: TBranch;
 begin
     printTitle(
-        'TEST 2 - Tree accessors and collections'
+        'TEST 2 - Tree types and accessors'
     );
 
     tree := initialiseTree(
@@ -260,8 +289,7 @@ begin
         20
     );
 
-    if (coord.x = 10)
-        and (coord.y = 20) then
+    if (coord.x = 10) and (coord.y = 20) then
         printPass(
             'Coordinate initialization.',
             5
@@ -304,7 +332,7 @@ begin
 
     if (retrievedPoint.coord.x = 10)
         and (retrievedPoint.coord.y = 20)
-        and (retrievedPoint.character = '*')
+        and (retrievedPoint.characters = '*')
         and (retrievedPoint.state = Dying) then
         printPass(
             'Point retrieval.',
@@ -360,7 +388,7 @@ begin
             9
         );
 
-    { Tree-level property tests. }
+    { Tree-level properties. }
 
     setSeed(
         tree,
@@ -503,7 +531,7 @@ begin
     printAt(
         1,
         7,
-        'Time    Growth    Points    Branches'
+        'Time    Growth    Points    Branches    Random state'
     );
 
     elapsedTime := 0;
@@ -532,17 +560,18 @@ begin
                 '         ' +
                 IntToStr(currentPoints) +
                 '         ' +
-                IntToStr(getBranchCount(tree))
+                IntToStr(getBranchCount(tree)) +
+                '          ' +
+                IntToStr(getRandomState(tree))
             );
 
             Inc(row);
         end;
 
         if currentPoints < previousPoints then
-            printAt(
-                1,
-                25,
-                'WARNING: point count decreased.'
+            printWarning(
+                'Point count decreased.',
+                25
             );
 
         previousPoints := currentPoints;
@@ -715,14 +744,72 @@ begin
     pauseScreen;
 end;
 
+function treesAreIdentical(
+    tree1, tree2: TTree
+): Boolean;
+var
+    point1: TPoint;
+    point2: TPoint;
+    branch1: TBranch;
+    branch2: TBranch;
+    i: LongInt;
+begin
+    treesAreIdentical := False;
+
+    if getSeed(tree1) <> getSeed(tree2) then
+        Exit;
+
+    if getRandomState(tree1) <> getRandomState(tree2) then
+        Exit;
+
+    if getTargetTime(tree1) <> getTargetTime(tree2) then
+        Exit;
+
+    if getGrowthTime(tree1) <> getGrowthTime(tree2) then
+        Exit;
+
+    if getShootCounter(tree1) <> getShootCounter(tree2) then
+        Exit;
+
+    if getPointCount(tree1) <> getPointCount(tree2) then
+        Exit;
+
+    if getBranchCount(tree1) <> getBranchCount(tree2) then
+        Exit;
+
+    for i := 0 to getPointCount(tree1) - 1 do
+    begin
+        point1 := getPoint(tree1, i);
+        point2 := getPoint(tree2, i);
+
+        if (point1.coord.x <> point2.coord.x)
+            or (point1.coord.y <> point2.coord.y)
+            or (point1.characters <> point2.characters)
+            or (point1.state <> point2.state) then
+            Exit;
+    end;
+
+    for i := 0 to getBranchCount(tree1) - 1 do
+    begin
+        branch1 := getBranch(tree1, i);
+        branch2 := getBranch(tree2, i);
+
+        if (branch1.coord.x <> branch2.coord.x)
+            or (branch1.coord.y <> branch2.coord.y)
+            or (branch1.remainingLife <> branch2.remainingLife)
+            or (branch1.age <> branch2.age)
+            or (branch1.shootCooldown <> branch2.shootCooldown)
+            or (branch1.state <> branch2.state) then
+            Exit;
+    end;
+
+    treesAreIdentical := True;
+end;
+
 procedure testDeterminism;
 var
     tree1: TTree;
     tree2: TTree;
-    point1: TPoint;
-    point2: TPoint;
-    i: LongInt;
-    identical: Boolean;
 begin
     printTitle(
         'TEST 6 - Deterministic generation'
@@ -748,42 +835,6 @@ begin
         FULL_TARGET_TIME
     );
 
-    identical := True;
-
-    if getPointCount(tree1) <> getPointCount(tree2) then
-        identical := False;
-
-    if getBranchCount(tree1) <> getBranchCount(tree2) then
-        identical := False;
-
-    if getRandomState(tree1) <> getRandomState(tree2) then
-        identical := False;
-
-    if identical then
-    begin
-        for i := 0 to getPointCount(tree1) - 1 do
-        begin
-            point1 := getPoint(
-                tree1,
-                i
-            );
-
-            point2 := getPoint(
-                tree2,
-                i
-            );
-
-            if (point1.coord.x <> point2.coord.x)
-                or (point1.coord.y <> point2.coord.y)
-                or (point1.character <> point2.character)
-                or (point1.state <> point2.state) then
-            begin
-                identical := False;
-                Break;
-            end;
-        end;
-    end;
-
     printAt(
         1,
         5,
@@ -791,7 +842,7 @@ begin
         IntToStr(DETERMINISTIC_SEED)
     );
 
-    if identical then
+    if treesAreIdentical(tree1, tree2) then
         printPass(
             'Same seed produces the same tree.',
             7
@@ -819,13 +870,27 @@ begin
     printAt(
         1,
         11,
+        'Tree 1 branches: ' +
+        IntToStr(getBranchCount(tree1))
+    );
+
+    printAt(
+        1,
+        12,
+        'Tree 2 branches: ' +
+        IntToStr(getBranchCount(tree2))
+    );
+
+    printAt(
+        1,
+        13,
         'Tree 1 random state: ' +
         IntToStr(getRandomState(tree1))
     );
 
     printAt(
         1,
-        12,
+        14,
         'Tree 2 random state: ' +
         IntToStr(getRandomState(tree2))
     );
@@ -844,15 +909,11 @@ begin
         'TEST 7 - Different seeds'
     );
 
-    { Generate two new seeds for this test. }
-
     seed1 :=
         Cardinal(Random(MAX_INT - 1)) + 1;
 
     seed2 :=
         Cardinal(Random(MAX_INT - 1)) + 1;
-
-    { Make sure they are different. }
 
     if seed1 = seed2 then
         seed2 := seed2 + 1;
@@ -926,10 +987,9 @@ begin
             13
         )
     else
-        printAt(
-            1,
-            13,
-            'NOTE: these two trees happened to have the same basic statistics.'
+        printWarning(
+            'Different seeds happened to have the same basic statistics.',
+            13
         );
 
     pauseScreen;
@@ -1047,7 +1107,7 @@ begin
             ',' +
             IntToStr(point.coord.y) +
             ') [' +
-            point.character +
+            point.characters +
             '] state=' +
             IntToStr(Ord(point.state))
         );
@@ -1088,10 +1148,184 @@ begin
     pauseScreen;
 end;
 
+function getTerminalX(
+    area: TDisplayArea;
+    point: TPoint
+): LongInt;
+begin
+    getTerminalX :=
+        ((area.xMin + area.xMax) div 2) + point.coord.x;
+end;
+
+function getTerminalY(
+    area: TDisplayArea;
+    point: TPoint
+): LongInt;
+begin
+    getTerminalY :=
+        area.yMax - 1 + point.coord.y;
+end;
+
+function pointIsInsideBorder(
+    area: TDisplayArea;
+    point: TPoint
+): Boolean;
+var
+    terminalX: LongInt;
+    terminalY: LongInt;
+    lastX: LongInt;
+begin
+    pointIsInsideBorder := False;
+
+    if point.characters = '' then
+        Exit;
+
+    terminalX := getTerminalX(area, point);
+    terminalY := getTerminalY(area, point);
+    lastX := terminalX + Length(point.characters) - 1;
+
+    if terminalX <= area.xMin then
+        Exit;
+
+    if lastX >= area.xMax then
+        Exit;
+
+    if terminalY <= area.yMin then
+        Exit;
+
+    if terminalY >= area.yMax then
+        Exit;
+
+    pointIsInsideBorder := True;
+end;
+
+function verifyTreeInsideBorder(
+    tree: TTree;
+    area: TDisplayArea;
+    showFirstFailure: Boolean
+): LongInt;
+var
+    i: LongInt;
+    outsideCount: LongInt;
+    point: TPoint;
+    terminalX: LongInt;
+    terminalY: LongInt;
+    lastX: LongInt;
+begin
+    outsideCount := 0;
+
+    for i := 0 to getPointCount(tree) - 1 do
+    begin
+        point := getPoint(tree, i);
+
+        if not pointIsInsideBorder(area, point) then
+        begin
+            Inc(outsideCount);
+
+            if showFirstFailure and (outsideCount = 1) then
+            begin
+                terminalX := getTerminalX(area, point);
+                terminalY := getTerminalY(area, point);
+                lastX := terminalX + Length(point.characters) - 1;
+
+                printAt(
+                    1,
+                    20,
+                    'First outside point: P' + IntToStr(i)
+                );
+
+                printAt(
+                    1,
+                    21,
+                    'Logical: (' +
+                    IntToStr(point.coord.x) +
+                    ',' +
+                    IntToStr(point.coord.y) +
+                    ')'
+                );
+
+                printAt(
+                    1,
+                    22,
+                    'Terminal X: ' +
+                    IntToStr(terminalX) +
+                    ' to ' +
+                    IntToStr(lastX)
+                );
+
+                printAt(
+                    1,
+                    23,
+                    'Terminal Y: ' +
+                    IntToStr(terminalY)
+                );
+
+                printAt(
+                    1,
+                    24,
+                    'Characters: [' +
+                    point.characters +
+                    ']'
+                );
+            end;
+        end;
+    end;
+
+    verifyTreeInsideBorder := outsideCount;
+end;
+
+procedure printDisplayHeader(
+    tree: TTree;
+    outsideCount: LongInt
+);
+begin
+    if WindMaxY < DISPLAY_Y_MAX + 1 then
+        Exit;
+
+    TextColor(White);
+
+    printAt(
+        1,
+        DISPLAY_Y_MAX + 2,
+        '80 x 40 DISPLAY TEST'
+    );
+
+    printAt(
+        1,
+        DISPLAY_Y_MAX + 3,
+        'Seed: ' +
+        IntToStr(getSeed(tree))
+    );
+
+    printAt(
+        1,
+        DISPLAY_Y_MAX + 4,
+        'Growth: ' +
+        IntToStr(getGrowthTime(tree))
+    );
+
+    printAt(
+        1,
+        DISPLAY_Y_MAX + 5,
+        'Points: ' +
+        IntToStr(getPointCount(tree)) +
+        '   Branches: ' +
+        IntToStr(getBranchCount(tree))
+    );
+
+    printAt(
+        1,
+        DISPLAY_Y_MAX + 6,
+        'Outside border: ' +
+        IntToStr(outsideCount)
+    );
+end;
+
 procedure testDisplay;
 var
     tree: TTree;
     area: TDisplayArea;
+    outsideCount: LongInt;
 begin
     clearScreen;
 
@@ -1112,45 +1346,139 @@ begin
         DISPLAY_Y_MAX
     );
 
+    { Verify first so debug information cannot overwrite the border. }
+
+    outsideCount :=
+        verifyTreeInsideBorder(
+            tree,
+            area,
+            False
+        );
+
     drawTree(
         tree,
         area
     );
 
-    TextColor(White);
+    printDisplayHeader(
+        tree,
+        outsideCount
+    );
+
+    if outsideCount = 0 then
+        printPass(
+            'All generated points fit inside the 80 x 40 border.',
+            DISPLAY_Y_MAX + 8
+        )
+    else
+        printFail(
+            'Some generated points are outside the 80 x 40 border.',
+            DISPLAY_Y_MAX + 8
+        );
 
     printAt(
         1,
-        DISPLAY_Y_MAX + 2,
-        'DISPLAY TEST'
+        DISPLAY_Y_MAX + 9,
+        'The border and tree above are drawn by TreeDisplay.'
+    );
+
+    pauseScreen;
+end;
+
+procedure testBorderVerification;
+var
+    tree: TTree;
+    area: TDisplayArea;
+    outsideCount: LongInt;
+begin
+    printTitle(
+        'TEST 11 - 80 x 40 border verification'
+    );
+
+    tree := initialiseTree(
+        randomSeed,
+        FULL_TARGET_TIME
+    );
+
+    growTree(
+        tree,
+        FULL_TARGET_TIME
+    );
+
+    area := initialiseDisplayArea(
+        DISPLAY_X_MIN,
+        DISPLAY_X_MAX,
+        DISPLAY_Y_MIN,
+        DISPLAY_Y_MAX
     );
 
     printAt(
         1,
-        DISPLAY_Y_MAX + 3,
-        'Seed: ' +
-        IntToStr(getSeed(tree))
+        5,
+        'Border: X=' +
+        IntToStr(DISPLAY_X_MIN) +
+        '..' +
+        IntToStr(DISPLAY_X_MAX) +
+        ', Y=' +
+        IntToStr(DISPLAY_Y_MIN) +
+        '..' +
+        IntToStr(DISPLAY_Y_MAX)
     );
 
     printAt(
         1,
-        DISPLAY_Y_MAX + 4,
-        'Points: ' +
+        7,
+        'Checking every generated point and its full character string...'
+    );
+
+    outsideCount :=
+        verifyTreeInsideBorder(
+            tree,
+            area,
+            True
+        );
+
+    printAt(
+        1,
+        10,
+        'Points checked: ' +
         IntToStr(getPointCount(tree))
     );
 
     printAt(
         1,
-        DISPLAY_Y_MAX + 5,
-        'Branches: ' +
-        IntToStr(getBranchCount(tree))
+        11,
+        'Points outside inner border: ' +
+        IntToStr(outsideCount)
+    );
+
+    if outsideCount = 0 then
+        printPass(
+            'Entire generated tree stays inside the 80 x 40 border.',
+            13
+        )
+    else
+        printFail(
+            'Generated tree contains points outside the 80 x 40 border.',
+            13
+        );
+
+    printAt(
+        1,
+        15,
+        'Inner drawing area:'
     );
 
     printAt(
         1,
-        DISPLAY_Y_MAX + 6,
-        'Growth: ' +
-        IntToStr(getGrowthTime(tree))
+        16,
+        'X > 1 and X + character length - 1 < 80'
+    );
+
+    printAt(
+        1,
+        17,
+        'Y > 1 and Y < 40'
     );
 
     pauseScreen;
@@ -1160,6 +1488,7 @@ procedure testDisplayOverflow;
 var
     tree: TTree;
     area: TDisplayArea;
+    outsideCount: LongInt;
 begin
     clearScreen;
 
@@ -1173,7 +1502,7 @@ begin
         FULL_TARGET_TIME
     );
 
-    { Small box deliberately used to test clipping. }
+    { Deliberately smaller box used to exercise TreeDisplay clipping. }
 
     area := initialiseDisplayArea(
         10,
@@ -1182,30 +1511,47 @@ begin
         25
     );
 
+    outsideCount :=
+        verifyTreeInsideBorder(
+            tree,
+            area,
+            False
+        );
+
     drawTree(
         tree,
         area
     );
 
-    TextColor(White);
+    if WindMaxY >= 27 then
+    begin
+        TextColor(White);
 
-    printAt(
-        1,
-        27,
-        'OVERFLOW TEST'
-    );
+        printAt(
+            1,
+            27,
+            'OVERFLOW / CLIPPING TEST'
+        );
 
-    printAt(
-        1,
-        28,
-        'The tree must stay inside the border.'
-    );
+        printAt(
+            1,
+            28,
+            'Points outside this smaller inner area: ' +
+            IntToStr(outsideCount)
+        );
 
-    printAt(
-        1,
-        29,
-        'Points outside the inner area must be ignored.'
-    );
+        printAt(
+            1,
+            29,
+            'TreeDisplay should ignore points outside the display area.'
+        );
+
+        printAt(
+            1,
+            30,
+            'The program must not crash or corrupt the border.'
+        );
+    end;
 
     pauseScreen;
 end;
@@ -1216,7 +1562,7 @@ var
     invalidArea: TDisplayArea;
 begin
     printTitle(
-        'TEST 12 - Invalid display areas'
+        'TEST 13 - Invalid display areas'
     );
 
     tree := initialiseTree(
@@ -1254,6 +1600,8 @@ begin
         7
     );
 
+    clearScreen;
+
     { Invalid CRT coordinate. }
 
     invalidArea := initialiseDisplayArea(
@@ -1265,7 +1613,7 @@ begin
 
     printAt(
         1,
-        9,
+        5,
         'Testing out-of-range area...'
     );
 
@@ -1276,29 +1624,196 @@ begin
 
     printPass(
         'Program survived out-of-range area.',
-        11
+        7
     );
 
     pauseScreen;
 end;
 
-procedure finalRandomTree;
+function getCompleteGrowthTime(
+    seed: Cardinal
+): LongInt;
 var
     tree: TTree;
-    area: TDisplayArea;
+    elapsedTime: LongInt;
 begin
-    clearScreen;
-
-    { Use the same random seed generated when the program started. }
-
     tree := initialiseTree(
-        randomSeed,
+        seed,
         FULL_TARGET_TIME
     );
 
-    growTree(
-        tree,
-        FULL_TARGET_TIME
+    elapsedTime := 0;
+
+    { Advance in the same 5-second growth units used by TreeGenerator.
+      The first time at which no active branches remain is the amount of
+      growth actually required to generate the complete tree. }
+    while elapsedTime < FULL_TARGET_TIME do
+    begin
+        elapsedTime := elapsedTime + 5;
+
+        growTree(
+            tree,
+            elapsedTime
+        );
+
+        if (getPointCount(tree) > 0)
+            and (getBranchCount(tree) = 0) then
+        begin
+            getCompleteGrowthTime := elapsedTime;
+            Exit;
+        end;
+    end;
+
+    { The tree did not finish during the test limit. Return the limit so
+      later tests can report that condition rather than divide by zero. }
+    getCompleteGrowthTime := FULL_TARGET_TIME;
+end;
+
+function getIntervalGrowthTime(
+    intervalNumber: LongInt;
+    completeGrowthTime: LongInt
+): LongInt;
+var
+    totalGrowthSteps: LongInt;
+    targetGrowthSteps: LongInt;
+begin
+    if intervalNumber <= 0 then
+    begin
+        getIntervalGrowthTime := 0;
+        Exit;
+    end;
+
+    { Work in the generator's discrete 5-second growth steps.  This is the
+      important correction: the 10 intervals divide the actual complete
+      tree growth into 10 stages.  Session duration is not involved here. }
+    totalGrowthSteps := completeGrowthTime div 5;
+    targetGrowthSteps :=
+        (intervalNumber * totalGrowthSteps) div INTERVAL_COUNT;
+
+    if intervalNumber >= INTERVAL_COUNT then
+        targetGrowthSteps := totalGrowthSteps;
+
+    getIntervalGrowthTime := targetGrowthSteps * 5;
+end;
+
+function treeStatesMatch(
+    tree1, tree2: TTree
+): Boolean;
+begin
+    treeStatesMatch := treesAreIdentical(tree1, tree2);
+end;
+
+procedure printIntervalResult(
+    intervalNumber: LongInt;
+    sessionMinutes: LongInt;
+    sessionElapsedSeconds: LongInt;
+    growthTime: LongInt;
+    completeGrowthTime: LongInt;
+    tree: TTree;
+    outsideCount: LongInt
+);
+begin
+    { All information is printed BELOW the 80 x 40 rectangle. }
+    if WindMaxY < DISPLAY_Y_MAX + 9 then
+        Exit;
+
+    printAt(
+        1,
+        DISPLAY_Y_MAX + 2,
+        'Session: ' +
+        IntToStr(sessionMinutes) +
+        ' min    Interval: ' +
+        IntToStr(intervalNumber) +
+        '/' +
+        IntToStr(INTERVAL_COUNT)
+    );
+
+    printAt(
+        1,
+        DISPLAY_Y_MAX + 3,
+        'Session elapsed: ' +
+        IntToStr(sessionElapsedSeconds div 60) +
+        ' min ' +
+        IntToStr(sessionElapsedSeconds mod 60) +
+        ' sec'
+    );
+
+    printAt(
+        1,
+        DISPLAY_Y_MAX + 4,
+        'Tree growth: ' +
+        IntToStr(growthTime) +
+        ' / ' +
+        IntToStr(completeGrowthTime) +
+        ' sec'
+    );
+
+    printAt(
+        1,
+        DISPLAY_Y_MAX + 5,
+        'Points: ' +
+        IntToStr(getPointCount(tree)) +
+        '    Branches: ' +
+        IntToStr(getBranchCount(tree)) +
+        '    Outside: ' +
+        IntToStr(outsideCount)
+    );
+end;
+
+procedure testSessionIntervals;
+var
+    sessionMinutes: LongInt;
+    sessionIntervalSeconds: LongInt;
+    intervalNumber: LongInt;
+    sessionElapsedSeconds: LongInt;
+    growthTime: LongInt;
+    completeGrowthTime: LongInt;
+    tree: TTree;
+    area: TDisplayArea;
+    outsideCount: LongInt;
+begin
+    printTitle(
+        'TEST 14 - Session duration and 10 equal growth intervals'
+    );
+
+    printAt(
+        1,
+        5,
+        'Enter session duration in minutes:'
+    );
+
+    ReadLn(sessionMinutes);
+
+    if sessionMinutes <= 0 then
+    begin
+        printFail(
+            'Session duration must be greater than zero.',
+            7
+        );
+        pauseScreen;
+        Exit;
+    end;
+
+    sessionIntervalSeconds :=
+        (sessionMinutes * 60) div INTERVAL_COUNT;
+
+    if sessionIntervalSeconds <= 0 then
+    begin
+        printFail(
+            'Session is too short to create 10 one-second-or-longer intervals.',
+            7
+        );
+        pauseScreen;
+        Exit;
+    end;
+
+    { Find how much growth this PARTICULAR seed actually needs. }
+    completeGrowthTime :=
+        getCompleteGrowthTime(randomSeed);
+
+    tree := initialiseTree(
+        randomSeed,
+        completeGrowthTime
     );
 
     area := initialiseDisplayArea(
@@ -1308,93 +1823,440 @@ begin
         DISPLAY_Y_MAX
     );
 
+    clearScreen;
+
+    for intervalNumber := 1 to INTERVAL_COUNT do
+    begin
+        sessionElapsedSeconds :=
+            (intervalNumber * sessionMinutes * 60)
+            div INTERVAL_COUNT;
+
+        growthTime :=
+            getIntervalGrowthTime(
+                intervalNumber,
+                completeGrowthTime
+            );
+
+        growTree(
+            tree,
+            growthTime
+        );
+
+        outsideCount :=
+            verifyTreeInsideBorder(
+                tree,
+                area,
+                False
+            );
+
+        clearScreen;
+
+        { The rectangle occupies rows 1..40. }
+        drawTree(
+            tree,
+            area
+        );
+
+        { Debug information starts on row 42, never over the rectangle. }
+        printIntervalResult(
+            intervalNumber,
+            sessionMinutes,
+            sessionElapsedSeconds,
+            growthTime,
+            completeGrowthTime,
+            tree,
+            outsideCount
+        );
+
+        if WindMaxY >= DISPLAY_Y_MAX + 7 then
+        begin
+            if outsideCount = 0 then
+                printAt(
+                    1,
+                    DISPLAY_Y_MAX + 6,
+                    '[PASS] Tree remains inside the 80 x 40 border.'
+                )
+            else
+                printAt(
+                    1,
+                    DISPLAY_Y_MAX + 6,
+                    '[FAIL] Tree has points outside the 80 x 40 border.'
+                );
+
+            if intervalNumber < INTERVAL_COUNT then
+                printAt(
+                    1,
+                    DISPLAY_Y_MAX + 7,
+                    'Press any key for the next interval...'
+                )
+            else
+                printAt(
+                    1,
+                    DISPLAY_Y_MAX + 7,
+                    'Final interval reached.'
+                );
+        end;
+
+        ReadKey;
+    end;
+
+    clearScreen;
+
+    printTitle(
+        'TEST 14 - Interval test complete'
+    );
+
+    printAt(
+        1,
+        5,
+        'Session duration: ' +
+        IntToStr(sessionMinutes) +
+        ' minutes'
+    );
+
+    printAt(
+        1,
+        6,
+        'Intervals: ' +
+        IntToStr(INTERVAL_COUNT)
+    );
+
+    printAt(
+        1,
+        7,
+        'Real time per interval: ' +
+        IntToStr(sessionIntervalSeconds div 60) +
+        ' min ' +
+        IntToStr(sessionIntervalSeconds mod 60) +
+        ' sec'
+    );
+
+    printAt(
+        1,
+        8,
+        'Complete tree growth: ' +
+        IntToStr(completeGrowthTime) +
+        ' sec'
+    );
+
+    if getGrowthTime(tree) = completeGrowthTime then
+        printPass(
+            'Final interval reaches the complete tree.',
+            10
+        )
+    else
+        printFail(
+            'Final interval does not reach the complete tree.',
+            10
+        );
+
+    pauseScreen;
+end;
+
+procedure testCompareSessionDurations;
+var
+    treeA: TTree;
+    treeB: TTree;
+    area: TDisplayArea;
+    intervalNumber: LongInt;
+    growthTimeA: LongInt;
+    growthTimeB: LongInt;
+    completeGrowthTime: LongInt;
+    identical: Boolean;
+    outsideA: LongInt;
+    outsideB: LongInt;
+    row: LongInt;
+begin
+    printTitle(
+        'TEST 15 - Compare 10-minute and 60-minute sessions'
+    );
+
+    completeGrowthTime :=
+        getCompleteGrowthTime(DETERMINISTIC_SEED);
+
+    treeA := initialiseTree(
+        DETERMINISTIC_SEED,
+        completeGrowthTime
+    );
+
+    treeB := initialiseTree(
+        DETERMINISTIC_SEED,
+        completeGrowthTime
+    );
+
+    area := initialiseDisplayArea(
+        DISPLAY_X_MIN,
+        DISPLAY_X_MAX,
+        DISPLAY_Y_MIN,
+        DISPLAY_Y_MAX
+    );
+
+    identical := True;
+
+    printAt(
+        1,
+        5,
+        'Both sessions use the same seed and the same 10 growth stages.'
+    );
+
+    printAt(
+        1,
+        6,
+        'Only their real interval lengths differ: 1 minute vs 6 minutes.'
+    );
+
+    printAt(
+        1,
+        8,
+        'Interval   Growth time A   Growth time B   Same tree?'
+    );
+
+    row := 9;
+
+    for intervalNumber := 1 to INTERVAL_COUNT do
+    begin
+        growthTimeA :=
+            getIntervalGrowthTime(
+                intervalNumber,
+                completeGrowthTime
+            );
+
+        growthTimeB :=
+            getIntervalGrowthTime(
+                intervalNumber,
+                completeGrowthTime
+            );
+
+        growTree(
+            treeA,
+            growthTimeA
+        );
+
+        growTree(
+            treeB,
+            growthTimeB
+        );
+
+        if not treeStatesMatch(treeA, treeB) then
+            identical := False;
+
+        outsideA :=
+            verifyTreeInsideBorder(
+                treeA,
+                area,
+                False
+            );
+
+        outsideB :=
+            verifyTreeInsideBorder(
+                treeB,
+                area,
+                False
+            );
+
+        if row <= 18 then
+        begin
+            printAt(
+                1,
+                row,
+                IntToStr(intervalNumber) +
+                '          ' +
+                IntToStr(growthTimeA) +
+                '              ' +
+                IntToStr(growthTimeB) +
+                '             ' +
+                BoolToStr(
+                    treeStatesMatch(treeA, treeB),
+                    True
+                )
+            );
+            Inc(row);
+        end;
+    end;
+
+    printAt(
+        1,
+        20,
+        '10-minute schedule: 1 minute between intervals.'
+    );
+
+    printAt(
+        1,
+        21,
+        '60-minute schedule: 6 minutes between intervals.'
+    );
+
+    printAt(
+        1,
+        22,
+        'Tree growth at corresponding intervals must be identical.'
+    );
+
+    if identical then
+        printPass(
+            'All 10 corresponding growth stages are identical.',
+            24
+        )
+    else
+        printFail(
+            'At least one corresponding growth stage is different.',
+            24
+        );
+
+    if (outsideA = 0) and (outsideB = 0) then
+        printPass(
+            'Both final trees fit inside the 80 x 40 border.',
+            25
+        )
+    else
+        printFail(
+            'At least one final tree exceeds the 80 x 40 border.',
+            25
+        );
+
+    pauseScreen;
+end;
+
+procedure testFinalRandomTree;
+var
+    tree: TTree;
+    area: TDisplayArea;
+    outsideCount: LongInt;
+begin
+    clearScreen;
+
+    { Use the same random seed generated when the program started. }
+
+    tree := initialiseTree(
+        randomSeed,
+        REFERENCE_GROWTH_TIME
+    );
+
+    growTree(
+        tree,
+        REFERENCE_GROWTH_TIME
+    );
+
+    area := initialiseDisplayArea(
+        DISPLAY_X_MIN,
+        DISPLAY_X_MAX,
+        DISPLAY_Y_MIN,
+        DISPLAY_Y_MAX
+    );
+
+    outsideCount :=
+        verifyTreeInsideBorder(
+            tree,
+            area,
+            False
+        );
+
     drawTree(
         tree,
         area
     );
 
-    TextColor(White);
+    if WindMaxY >= DISPLAY_Y_MAX + 2 then
+    begin
+        TextColor(White);
 
-    printAt(
-        1,
-        DISPLAY_Y_MAX + 2,
-        'RANDOM DEBUG TREE'
-    );
+        printAt(
+            1,
+            DISPLAY_Y_MAX + 2,
+            'FINAL RANDOM DEBUG TREE'
+        );
 
-    printAt(
-        1,
-        DISPLAY_Y_MAX + 3,
-        'Seed: ' +
-        IntToStr(getSeed(tree))
-    );
+        printAt(
+            1,
+            DISPLAY_Y_MAX + 3,
+            'Seed: ' +
+            IntToStr(getSeed(tree))
+        );
 
-    printAt(
-        1,
-        DISPLAY_Y_MAX + 4,
-        'Points: ' +
-        IntToStr(getPointCount(tree))
-    );
+        printAt(
+            1,
+            DISPLAY_Y_MAX + 4,
+            'Points: ' +
+            IntToStr(getPointCount(tree))
+        );
 
-    printAt(
-        1,
-        DISPLAY_Y_MAX + 5,
-        'Branches: ' +
-        IntToStr(getBranchCount(tree))
-    );
+        printAt(
+            1,
+            DISPLAY_Y_MAX + 5,
+            'Branches: ' +
+            IntToStr(getBranchCount(tree))
+        );
 
-    printAt(
-        1,
-        DISPLAY_Y_MAX + 6,
-        'Growth: ' +
-        IntToStr(getGrowthTime(tree))
-    );
+        printAt(
+            1,
+            DISPLAY_Y_MAX + 6,
+            'Growth: ' +
+            IntToStr(getGrowthTime(tree))
+        );
 
-    printAt(
-        1,
-        DISPLAY_Y_MAX + 8,
-        'This run used a randomly generated seed.'
-    );
+        printAt(
+            1,
+            DISPLAY_Y_MAX + 7,
+            'Outside border: ' +
+            IntToStr(outsideCount)
+        );
 
-    printAt(
-        1,
-        DISPLAY_Y_MAX + 9,
-        'Run the program again to test another tree.'
-    );
+        printAt(
+            1,
+            DISPLAY_Y_MAX + 8,
+            'Border: 80 x 40'
+        );
 
-    printAt(
-        1,
-        DISPLAY_Y_MAX + 11,
-        'Press any key to exit...'
-    );
+        if outsideCount = 0 then
+            printPass(
+                'Final random tree fits inside the border.',
+                DISPLAY_Y_MAX + 9
+            )
+        else
+            printFail(
+                'Final random tree exceeds the border.',
+                DISPLAY_Y_MAX + 9
+            );
+
+        printAt(
+            1,
+            41,
+            'Press any key to exit...'
+        );
+    end;
 
     ReadKey;
 end;
 
 begin
     { Create one random seed for this program execution. }
+
     initialiseRandomSeed;
 
-    { Run the debugging tests. }
+    { Run the debugging tests in increasing complexity. }
 
     testTreeInitialisation;
     testTreeAccessors;
-
     testIncrementalGrowth;
     testTimeLimit;
     testFullGeneration;
-
     testDeterminism;
     testDifferentSeeds;
     testRandomState;
-
     testTreePointSamples;
-
     testDisplay;
+    testBorderVerification;
     testDisplayOverflow;
     testInvalidDisplayArea;
 
+    { Test the relationship between session duration and tree stages. }
+
+    testSessionIntervals;
+    testCompareSessionDurations;
+
     { Finally show the randomly generated tree. }
-    finalRandomTree;
+
+    testFinalRandomTree;
 
     TextColor(White);
     ClrScr;

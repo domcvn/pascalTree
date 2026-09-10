@@ -62,7 +62,7 @@ This unit defines the data structures used to represent a tree.</p>
 <td class="itemcode"><code>function <strong><a href="TreeTypes.html#initialiseCoord-LongInt-LongInt-">initialiseCoord</a></strong>(x, y: LongInt): <a href="TreeTypes.TCoord.html">TCoord</a>;</code></td>
 </tr>
 <tr class="list2 visibility-published">
-<td class="itemcode"><code>function <strong><a href="TreeTypes.html#initialisePoint-TCoord-Char-TState-">initialisePoint</a></strong>(coord: <a href="TreeTypes.TCoord.html">TCoord</a>; character: Char; state: <a href="TreeTypes.html#TState">TState</a>): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
+<td class="itemcode"><code>function <strong><a href="TreeTypes.html#initialisePoint-TCoord-String-TState-">initialisePoint</a></strong>(coord: <a href="TreeTypes.TCoord.html">TCoord</a>; characters: String; state: <a href="TreeTypes.html#TState">TState</a>): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
 </tr>
 <tr class="list visibility-published">
 <td class="itemcode"><code>function <strong><a href="TreeTypes.html#getPoint-TTree-LongInt-">getPoint</a></strong>(tree: <a href="TreeTypes.TTree.html">TTree</a>; idx: LongInt): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
@@ -144,11 +144,11 @@ Creates and returns a coordinate initialised with the given x and y values.</p>
 </table>
 <table class="detail visibility-published wide_list">
 <tr class="list visibility-published">
-<td class="itemcode"><span id="initialisePoint-TCoord-Char-TState-"></span><code>function <strong>initialisePoint</strong>(coord: <a href="TreeTypes.TCoord.html">TCoord</a>; character: Char; state: <a href="TreeTypes.html#TState">TState</a>): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
+<td class="itemcode"><span id="initialisePoint-TCoord-String-TState-"></span><code>function <strong>initialisePoint</strong>(coord: <a href="TreeTypes.TCoord.html">TCoord</a>; characters: String; state: <a href="TreeTypes.html#TState">TState</a>): <a href="TreeTypes.TPoint.html">TPoint</a>;</code></td>
 </tr>
 <tr><td colspan="1">
 <p>
-Creates and returns a point initialised with the given coordinate, character, and state.</p>
+Creates and returns a point initialised with the given coordinate, characters, and state.</p>
 </td></tr>
 </table>
 <table class="detail visibility-published wide_list">
@@ -159,7 +159,7 @@ Creates and returns a point initialised with the given coordinate, character, an
 <p>
 Returns the point stored at the index <strong>idx</strong> in tree.
 
-<p>If <strong>idx</strong> is outside the valid range of the <strong>points</strong> array, an empty point with a blank character and Dead state is returned.</p>
+<p>If <strong>idx</strong> is outside the valid range of the <strong>points</strong> array, an empty point with an empty character string and Dead state is returned.</p>
 </td></tr>
 </table>
 <table class="detail visibility-published wide_list">
@@ -330,7 +330,7 @@ Sets the amount of time already converted into tree growth.</p>
 </tr>
 <tr><td colspan="1">
 <p>
-Returns the current number of shoots created by the tree.</p>
+Returns the counter used to alternate the direction of new shoots.</p>
 </td></tr>
 </table>
 <table class="detail visibility-published wide_list">
@@ -339,7 +339,7 @@ Returns the current number of shoots created by the tree.</p>
 </tr>
 <tr><td colspan="1">
 <p>
-Sets the current number of shoots created by the tree.</p>
+Sets the counter used to alternate the direction of new shoots.</p>
 </td></tr>
 </table>
 <table class="detail visibility-published wide_list">

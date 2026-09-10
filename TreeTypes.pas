@@ -20,7 +20,7 @@ type
     { Represents a single graphical element of a tree. }
     TPoint = record 
         coord: TCoord; //< Position of a point
-        character: Char; //< Determines how it is displayed
+        characters: String; //< Characters used to display this point
         state: TState; //< State of the point
     end;
 
@@ -38,8 +38,8 @@ type
         seed: Cardinal; //< Initial value used by the random generator
         randomState: Cardinal; //< Current state of the random generator
         targetTime: LongInt; //< Selected duration, in seconds
-        growthTime: LongInt; //< The time already converted into growth, in seconds
-        shootCounter: LongInt; //< Number of shoots created by the tree
+        growthTime: LongInt; //< The time already converted into tree growth, in seconds
+        shootCounter: LongInt; //< Counter used to alternate the direction of new shoots
         points: Array of TPoint; //< All graphical points already generated
         branches: Array of TBranch; //< Branches that are still growing
     end;
@@ -48,12 +48,12 @@ type
 { Creates and returns a coordinate initialised with the given x and y values. }
 function initialiseCoord(x, y: LongInt): TCoord;
 
-{ Creates and returns a point initialised with the given coordinate, character, and state. }
-function initialisePoint(coord: TCoord; character: Char; state: TState): TPoint;
+{ Creates and returns a point initialised with the given coordinate, characters, and state. }
+function initialisePoint(coord: TCoord; characters: String; state: TState): TPoint;
 
 { Returns the point stored at the index @bold(idx) in tree. 
 
-If @bold(idx) is outside the valid range of the @bold(points) array, an empty point with a blank character and Dead state is returned.}
+If @bold(idx) is outside the valid range of the @bold(points) array, an empty point with an empty character string and Dead state is returned.}
 function getPoint(tree: TTree; idx: LongInt): TPoint;
 
 { Sets the point at index @bold(idx).
@@ -127,10 +127,10 @@ function getGrowthTime(tree: TTree): LongInt;
 { Sets the amount of time already converted into tree growth. }
 procedure setGrowthTime(var tree: TTree; growthTime: LongInt);
 
-{ Returns the current number of shoots created by the tree. }
+{ Returns the counter used to alternate the direction of new shoots. }
 function getShootCounter(tree: TTree): LongInt;
 
-{ Sets the current number of shoots created by the tree. }
+{ Sets the counter used to alternate the direction of new shoots. }
 procedure setShootCounter(var tree: TTree; shootCounter: LongInt);
 
 { Clears all points and active branches of tree and resets its stored seed, random state, target time, growth time, and shoot counter. }
@@ -145,10 +145,10 @@ begin
 end; 
 
 
-function initialisePoint(coord: TCoord; character: Char; state: TState): TPoint;
+function initialisePoint(coord: TCoord; characters: String; state: TState): TPoint;
 begin 
     initialisePoint.coord := coord;
-    initialisePoint.character := character;
+    initialisePoint.characters := characters;
     initialisePoint.state := state;
 end;
 
@@ -158,7 +158,7 @@ begin
     if (idx >= 0) and (idx < Length(tree.points)) then 
         getPoint := tree.points[idx]
     else 
-        getPoint := initialisePoint(initialiseCoord(0,0), ' ', Dead);
+        getPoint := initialisePoint(initialiseCoord(0,0), '', Dead);
 end;
 
 
@@ -169,10 +169,8 @@ begin
     pointCount := length(tree.points);
     if (idx < 0) or (idx > pointCount) then 
         Exit;
-    
     if idx = pointCount then 
         setLength(tree.points, pointCount + 1);
-
     tree.points[idx] := point;
 end;
 
