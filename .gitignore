@@ -1,0 +1,4 @@
+# Free Pascal compiled files
+*.ppu
+*.o
+*.exe
